@@ -10,6 +10,7 @@ Vue.use(IconsPlugin);
 Vue.use(BootstrapVueIcons);
 
 
+
 Vue.config.productionTip = false;
 
 // Import Bootstrap and Bootstrap-Vue css
