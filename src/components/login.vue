@@ -1,12 +1,18 @@
 <template>
 <b-container>
 
+    <b-alert
+            :show="mainDismissCountDown" dismissible variant="danger" @dismissed="mainDismissCountDown=0" @dismiss-count-down="mainCountDownChanged">
+        {{ errorMsg }}
+    </b-alert>
 
     <body class="text-center">
     <form class="form-signin">
         <img class="mb-4" src="../assets/market-logo.svg" alt="" width="72" height="57">
         <h1 class="h3 mb-3 font-weight-normal">Welcome to WashU Student Marketplace</h1>
-        <b-form-input id="input-1" v-model="email" type="email" placeholder="Email address" required></b-form-input>
+        <b-input-group append="@wustl.edu">
+            <b-form-input id="email-sign-up" v-model="email" placeholder="E-mail address" type="email"  required></b-form-input>
+        </b-input-group>
         <b-form-input id="input-2" v-model="password" type="password" placeholder="Password" required></b-form-input>
 <!--        <div class="checkbox mb-3">
             <label>
@@ -19,7 +25,7 @@
                 <b-link v-b-modal.modal-sign-up href="#foo">Sign me up!</b-link>
             </div>
             <div class="w-50 text-md-right">
-                <b-link  href="#foo">Forget password?</b-link>
+                <b-link v-b-modal.modal-pwd-recovery href="#foo">Forget password?</b-link>
             </div>
         </div>
         <b-button variant="primary" class="btn-lg btn-block" @click="onSignInBtnClick()" type="submit">Sign in</b-button>
@@ -27,8 +33,9 @@
     </form>
     </body>
 
-    <b-modal id="modal-sign-up" ref="modal" title="Sign up" @show="resetSignUpModal" @hidden="resetSignUpModal" @ok="handleOk">
 
+
+    <b-modal id="modal-sign-up" ref="modal" title="Sign up" @show="resetSignUpModal" @hidden="resetSignUpModal" @ok="handleOk">
         <form ref="form" @submit.stop.prevent="handleSubmit">
             <b-form-group label="WashU E-mail address" label-for="email-sign-up" invalid-feedback="WashU E-mail address is required">
                 <b-input-group append="@wustl.edu">
@@ -48,10 +55,15 @@
         </b-alert>
     </b-modal>
 
-    <b-modal id="modal-signup-success" title="Sign Up Successful" ok-only>
-        <p class="my-2">Your WashU e-mail address should receive a verification e-mail shortly</p>
+    <b-modal id="modal-pwd-recovery" ref="modal" title="Forget Password" @show="resetPRModal" @hidden="resetPRModal" @ok="handlePROk">
+        <form ref="form" @submit.stop.prevent="handleSubmit">
+            <b-form-group label="WashU E-mail address" label-for="email-PR">
+                <b-input-group append="@wustl.edu">
+                    <b-form-input id="email-PR" v-model="emailPR"  type="email"  required></b-form-input>
+                </b-input-group>
+            </b-form-group>
+        </form>
     </b-modal>
-
 
 
 </b-container>
@@ -68,9 +80,12 @@
                 emailSignUp:'',
                 pwdSignUp:'',
                 pwdRSignUp:'',
+                emailPR:'',
                 errorMsg:'',
-                dismissSecs: 2,
+                dismissSecs: 3,
                 dismissCountDown: 0,
+                mainDismissSecs: 5,
+                mainDismissCountDown: 0,
                 MsgBox: '',
             }
         },
@@ -95,6 +110,12 @@
             },
             showAlert() {
                 this.dismissCountDown = this.dismissSecs
+            },
+            mainCountDownChanged(mainDismissCountDown) {
+                this.mianDismissCountDown = mainDismissCountDown
+            },
+            showMainAlert() {
+                this.mainDismissCountDown = this.mainDismissSecs
             },
             checkSignupForm(){
                 if(this.emailSignUp.length >= 1){
@@ -126,10 +147,23 @@
                 }
 
             },
+            checkPRForm(){
+                if(this.emailPR.length >= 1) {
+                    console.log("Check PR successful");
+                    return true;
+                }
+                console.log("Check PR unsuccessful");
+                return false;
+
+                },
             resetSignUpModal() {
                 this.emailSignUp = '';
                 this.pwdSignUp = '';
                 this.pwdRSignUp = '';
+                this.errorMsg = '';
+            },
+            resetPRModal() {
+                this.emailPR = '';
                 this.errorMsg = '';
             },
             handleOk(bvModalEvt) {
@@ -142,10 +176,25 @@
                     bvModalEvt.preventDefault();
                 }
             },
+            handlePROk(bvModalEvt) {
+                // Prevent modal from closing
+                if (this.checkSignupForm() === false) {
+                    this.showMsgBox('Requested E-mail Sent', 'If you have an account associated with this address, you will receive an temporary password via e-mail shortly. ');
+                } else {
+                    bvModalEvt.preventDefault();
+                }
+            }
+            ,
             onSignInBtnClick(){
                 console.log(this.email);
                 //this.fetchData();
+                this.onSignInError();
             },
+            onSignInError(){
+                this.errorMsg = 'E-mail address or password does not match or record, please try again';
+                this.showMainAlert();
+            }
+        ,
             fetchData(){
                 var aClickJSON = {"cmd": "getRealTime","val":1};
                 fetch('https://webhook.site/30ff11fd-2a73-455e-9469-32109732faf5', {

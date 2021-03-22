@@ -5,9 +5,9 @@
       <!-- specify the link by passing the `to` prop. -->
       <!-- `<router-link>` will be rendered as an `<a>` tag by default -->
       <li><router-link to="/login">Login</router-link></li>
-      <li><router-link to="/signup">Signup</router-link></li>
+<!--      <li><router-link to="/signup">Signup</router-link></li>
       <li><router-link to="/verify">Verify</router-link></li>
-      <li><router-link to="/recovery">Recovery</router-link></li>
+      <li><router-link to="/recovery">Recovery</router-link></li>-->
       <li><router-link to="/thanks">Thanks</router-link></li>
       <li><router-link to="/new-item">New Item</router-link></li>
       <li><router-link to="/browse">Browse</router-link></li>
@@ -19,7 +19,7 @@
 
 <script>
 import login from "@/components/login";
-import signup from "@/components/signup";
+//import signup from "@/components/signup";
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 
@@ -27,7 +27,7 @@ Vue.use(VueRouter);
 
 const routes = [
   {path: '/login', component: login},
-  {path: '/signup', component: signup}
+//  {path: '/signup', component: signup}
   // {path: '/verify', component: verify},
   // {path: '/recovery', component: recovery},
   // {path: '/item/%id', component: recovery},
