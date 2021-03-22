@@ -35,11 +35,11 @@ const routes = [
   // {path: '/user/%id', component: user},
   // {path: '/new-item', component: newItem},
   // {path: '/browse', component: browse}
-]
+];
 
 const router = new VueRouter({
   routes
-})
+});
 
 export default {
   router

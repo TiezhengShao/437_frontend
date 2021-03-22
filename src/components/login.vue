@@ -5,7 +5,7 @@
     <body class="text-center">
     <form class="form-signin">
         <img class="mb-4" src="../assets/market-logo.svg" alt="" width="72" height="57">
-        <h1 class="h3 mb-3 font-weight-normal">Welcome to BetterMarket</h1>
+        <h1 class="h3 mb-3 font-weight-normal">Welcome to WashU Student Marketplace</h1>
         <b-form-input id="input-1" v-model="email" type="email" placeholder="Email address" required></b-form-input>
         <b-form-input id="input-2" v-model="password" type="password" placeholder="Password" required></b-form-input>
 <!--        <div class="checkbox mb-3">
@@ -48,6 +48,10 @@
         </b-alert>
     </b-modal>
 
+    <b-modal id="modal-signup-success" title="Sign Up Successful" ok-only>
+        <p class="my-2">Your WashU e-mail address should receive a verification e-mail shortly</p>
+    </b-modal>
+
 
 
 </b-container>
@@ -67,10 +71,25 @@
                 errorMsg:'',
                 dismissSecs: 2,
                 dismissCountDown: 0,
+                MsgBox: '',
             }
         },
 
         methods:{
+            showMsgBox(title, content) {
+                this.boxOne = '';
+                this.$bvModal.msgBoxOk(content, {
+                    title: title,
+                    okVariant: 'primary',
+                    headerClass: 'p-2 border-bottom-0',
+                    footerClass: 'p-2 border-top-0',
+                    centered: true
+                })
+                    .then(value => {
+                        this.boxTwo = value
+                    })
+
+            },
             countDownChanged(dismissCountDown) {
                 this.dismissCountDown = dismissCountDown
             },
@@ -115,11 +134,12 @@
             },
             handleOk(bvModalEvt) {
                 // Prevent modal from closing
-                bvModalEvt.preventDefault();
-                // Trigger submit handler
-                //this.handleSubmit()
-                if(this.checkSignupForm()){
-                    console.log(123);
+                if(this.checkSignupForm() === false){
+                    this.showMsgBox('Your Account has been created', 'A verification e-mail should has been sent to your' +
+                        ' Washington University e-mail address. Please Complete verification as soon as possible. ');
+                }
+                else {
+                    bvModalEvt.preventDefault();
                 }
             },
             onSignInBtnClick(){
