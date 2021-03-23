@@ -11,7 +11,7 @@
         <img class="mb-4" src="../assets/market-logo.svg" alt="" width="72" height="57">
         <h1 class="h3 mb-3 font-weight-normal">Welcome to WashU Student Marketplace</h1>
         <b-input-group append="@wustl.edu">
-            <b-form-input id="email-sign-up" v-model="email" placeholder="E-mail address" type="email"  required></b-form-input>
+            <b-form-input id="email-sign-up" v-model="email" placeholder="E-mail address" type="text"  required></b-form-input>
         </b-input-group>
         <b-form-input id="input-2" v-model="password" type="password" placeholder="Password" required></b-form-input>
 <!--        <div class="checkbox mb-3">
@@ -82,7 +82,7 @@
                 pwdRSignUp:'',
                 emailPR:'',
                 errorMsg:'',
-                dismissSecs: 3,
+                dismissSecs: '',
                 dismissCountDown: 0,
                 mainDismissSecs: 5,
                 mainDismissCountDown: 0,
@@ -156,6 +156,15 @@
                 return false;
 
                 },
+            checkSignInForm(){
+                if(this.email.length >= 1 && this.password.length >= 3) {
+                    console.log("Check SignIn successful");
+                    return true;
+                }
+                console.log("Check SignIn unsuccessful");
+                return false;
+
+            },
             resetSignUpModal() {
                 this.emailSignUp = '';
                 this.pwdSignUp = '';
@@ -179,6 +188,8 @@
             handlePROk(bvModalEvt) {
                 // Prevent modal from closing
                 if (this.checkSignupForm() === false) {
+                    var json = {"cmd": "getRealTime","val":this.emailPR};
+                    this.fetchData(json);
                     this.showMsgBox('Requested E-mail Sent', 'If you have an account associated with this address, you will receive an temporary password via e-mail shortly. ');
                 } else {
                     bvModalEvt.preventDefault();
@@ -186,8 +197,9 @@
             }
             ,
             onSignInBtnClick(){
-                console.log(this.email);
-                //this.fetchData();
+                //console.log(this.email);
+                var aClickJSON = {"cmd": "getRealTime","val":this.email};
+                this.fetchData(aClickJSON);
                 this.onSignInError();
             },
             onSignInError(){
@@ -195,14 +207,16 @@
                 this.showMainAlert();
             }
         ,
-            fetchData(){
-                var aClickJSON = {"cmd": "getRealTime","val":1};
+            fetchData(json){
+                console.log(json);
+
                 fetch('https://webhook.site/30ff11fd-2a73-455e-9469-32109732faf5', {
                     method: 'post',
-                    body: JSON.stringify(aClickJSON)
+                    body: JSON.stringify(json)
                 }).then(response => response.json())
                     .then(data => {
-                        this.genTable(data);
+                        console.log(data);
+                        console.log('asd')
                         //this.consoleOut(data);
                     });
             },
