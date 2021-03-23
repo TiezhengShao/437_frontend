@@ -9,7 +9,7 @@
       <!-- `<router-link>` will be rendered as an `<a>` tag by default -->
       <li><router-link to="/login">Login</router-link></li>
       <li><router-link to="/new">New Item</router-link></li>
-      <li><router-link to="/item/%id">Item</router-link></li>
+      <li><router-link to="/item/:id">Item</router-link></li>
       <li><router-link to="/thanks">Thanks</router-link></li>
       <li><router-link to="/browse">Browse</router-link></li>
     </ul>
@@ -29,18 +29,42 @@ import VueRouter from 'vue-router';
 Vue.use(VueRouter);
 
 const routes = [
-  {path: '/login', component: login},
+  {path: '/login', component: login, meta: {guest: true}},
   // {path: '/verify', component: verify},
-  {path: '/item/%id', component: item},
-  {path: '/thanks', component: thanks},
-  {path: '/new', component: newItem},
-  {path: '/browse', component: browse}
+  {path: '/item/:id', component: item, meta: {requiresAuth: true}},
+  {path: '/thanks', component: thanks, meta: {requiresAuth: true}},
+  {path: '/new', component: newItem, meta: {requiresAuth: true}},
+  {path: '/browse', component: browse, meta: {requiresAuth: true}}
 ];
 
 const router = new VueRouter({
   routes,
   mode: 'history'
 });
+
+// restricts access based on jwt token
+
+// router.beforeEach((to, from, next) => {
+//     if(to.matched.some(record => record.meta.requiresAuth)) {
+//         if (localStorage.getItem('jwt') == null) {
+//             next({
+//                 path: '/login',
+//                 params: { nextUrl: to.fullPath }
+//             })
+//         } else {
+//             next();
+//         }
+//     } else if(to.matched.some(record => record.meta.guest)) {
+//         if(localStorage.getItem('jwt') == null){
+//             next()
+//         }
+//         else{
+//             next({ path: '/browse'})
+//         }
+//     } else {
+//         next() 
+//     }
+// })
 
 export default {
   router
