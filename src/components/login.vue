@@ -14,6 +14,7 @@
 
             <b-form-input id="email-sign-up" v-model="email" placeholder="E-mail address" type="text"  required></b-form-input>
         </b-input-group>
+
         <b-form-input id="input-2" v-model="password" type="password" autocomplete="on" placeholder="Password" required></b-form-input>
 
         <div class="form-group d-md-flex">

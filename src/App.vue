@@ -8,6 +8,7 @@
       <!-- speccify the link by passing the `to` prop. -->
       <!-- `<router-link>` will be rendered as an `<a>` tag by default -->
       <li><router-link to="/login">Login</router-link></li>
+      <li><router-link to="/pr">Password Reset</router-link></li>
       <li><router-link to="/new">New Item</router-link></li>
       <li><router-link to="/item/:id">Item</router-link></li>
       <li><router-link to="/thanks">Thanks</router-link></li>
@@ -18,7 +19,7 @@
 
 <script>
 import login from "@/components/login";
-//import signup from "@/components/signup";
+import pwdRst from "@/components/pwdRst";
 import thanks from "@/components/thanks";
 import browse from "@/components/browse";
 import newItem from "@/components/newItem";
@@ -30,7 +31,7 @@ Vue.use(VueRouter);
 
 const routes = [
   {path: '/login', component: login, meta: {guest: true}},
-  // {path: '/verify', component: verify},
+   {path: '/pr', component: pwdRst},
   {path: '/item/:id', component: item, meta: {requiresAuth: true}},
   {path: '/thanks', component: thanks, meta: {requiresAuth: true}},
   {path: '/new', component: newItem, meta: {requiresAuth: true}},
