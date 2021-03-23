@@ -14,7 +14,7 @@
 
             <b-form-input id="email-sign-up" v-model="email" placeholder="E-mail address" type="text"  required></b-form-input>
         </b-input-group>
-        <b-form-input id="input-2" v-model="password" type="password" placeholder="Password" required></b-form-input>
+        <b-form-input id="input-2" v-model="password" type="password" autocomplete="on" placeholder="Password" required></b-form-input>
 
         <div class="form-group d-md-flex">
             <div class="w-50 text-md-left">
@@ -24,7 +24,7 @@
                 <b-link v-b-modal.modal-pwd-recovery href="#foo">Forget password?</b-link>
             </div>
         </div>
-        <b-button variant="primary" class="btn-lg btn-block" @click="onSignInBtnClick()" type="submit">Sign in</b-button>
+        <b-button variant="primary" class="btn-lg btn-block" @click="onSignInBtnClick()" >Sign in</b-button>
 
     </form>
     </body>
@@ -39,10 +39,10 @@
                 </b-input-group>
             </b-form-group>
             <b-form-group label="Password" label-for="password-sign-up" invalid-feedback="Password is required">
-                <b-form-input id="password-sign-up" v-model="pwdSignUp" type="password" required></b-form-input>
+                <b-form-input id="password-sign-up" v-model="pwdSignUp" type="password" autocomplete="off" required></b-form-input>
             </b-form-group>
             <b-form-group label="Repeat Password" label-for="passwordR-sign-up" invalid-feedback="Password does not match">
-                <b-form-input id="passwordR-sign-up" v-model="pwdRSignUp" type="password" required></b-form-input>
+                <b-form-input id="passwordR-sign-up" v-model="pwdRSignUp" type="password" autocomplete="off" required></b-form-input>
             </b-form-group>
         </form>
         <b-alert
@@ -67,6 +67,8 @@
 </template>
 
 <script>
+    import axios from 'axios'
+
     export default {
         name: "login",
         data() {
@@ -173,9 +175,10 @@
             },
             handleOk(bvModalEvt) {
                 // Prevent modal from closing
-                if(this.checkSignupForm() === false){
-                    this.showMsgBox('Your Account has been created', 'A verification e-mail should has been sent to your' +
-                        ' Washington University e-mail address. Please Complete verification as soon as possible. ');
+                bvModalEvt.preventDefault();
+                if(this.checkSignupForm() === true){
+                    var signUpJSON = {"LoginName": this.emailSignUp,"HashedPassword":this.pwdSignUp};
+                    this.fetchData(2,signUpJSON);
                 }
                 else {
                     bvModalEvt.preventDefault();
@@ -194,28 +197,71 @@
             ,
             onSignInBtnClick(){
                 //console.log(this.email);
-                var aClickJSON = {"cmd": "getRealTime","val":this.email};
-                this.fetchData(aClickJSON);
-                this.onSignInError();
+                var aClickJSON = {"LoginName": this.email,"HashedPassword":this.password};
+                this.fetchData(1, aClickJSON);
+                //this.onSignInError();
             },
             onSignInError(){
                 this.errorMsg = 'E-mail address or password does not match or record, please try again';
                 this.showMainAlert();
+            },
+            onSignInSuccess(){
+                this.errorMsg = 'Sign in successful, redirecting...';
+                this.showMainAlert();
             }
         ,
-            fetchData(json){
-                console.log(json);
+            // type 1->sign in, 2->sign up, 3->Password Recovery
+            fetchData(type, json){
+                console.log(JSON.stringify(json));
+                var link = 'http://165.232.138.223:8080/auth/user/login';
+                if(type === 2){
+                    link = 'http://165.232.138.223:8080/auth/user/signup';
+                }
+                console.log('link:' + link);
 
-                fetch('https://webhook.site/30ff11fd-2a73-455e-9469-32109732faf5', {
-                    method: 'post',
-                    body: JSON.stringify(json)
+                fetch(link, {
+                    method: 'POST',
+                    body: JSON.stringify(json),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
                 }).then(response => response.json())
                     .then(data => {
                         console.log(data);
-                        console.log('asd')
-                        //this.consoleOut(data);
-                    });
+                        if(type === 1){
+                            this.onSignInSuccess();
+                            this.$router.push({ path: '/new' })
+                        }else if(type === 2){
+                            this.$bvModal.hide('modal-sign-up');
+                            this.showMsgBox('Your Account has been created', 'A verification e-mail should has been sent to your' +
+                                ' Washington University e-mail address. Please Complete verification as soon as possible. ');
+                        }
+                    }).catch(error=>{
+                        console.log(error);
+                        if(type === 1){
+                            this.onSignInError();
+                        } else if(type === 2){
+                            this.errorMsg = 'Account already exist. ';
+                            this.showAlert();
+                        }
+                        },
+
+                );
             },
+            getCloudData(json){
+                console.log(JSON.stringify(json));
+                axios.post("http://165.232.138.223:8080/auth/user/login", JSON.stringify(json),
+                    {
+                    headers: {
+                        'Content-Type': 'application/json',}
+                    })
+                    .then(response => this.articleId = response.data)
+                    .catch(error => {
+                        this.errorMessage = error.message;
+                        console.error("There was an error!", error);
+                    });
+            }
+            ,
         }
     }
 </script>
@@ -278,5 +324,4 @@
         border-top-left-radius: 0;
         border-top-right-radius: 0;
     }
-
 </style>

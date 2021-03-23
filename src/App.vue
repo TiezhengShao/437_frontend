@@ -5,7 +5,7 @@
     <router-view></router-view>
     <ul>
       <!-- use router-link component for navigation. -->
-      <!-- specify the link by passing the `to` prop. -->
+      <!-- speccify the link by passing the `to` prop. -->
       <!-- `<router-link>` will be rendered as an `<a>` tag by default -->
       <li><router-link to="/login">Login</router-link></li>
       <li><router-link to="/new">New Item</router-link></li>
