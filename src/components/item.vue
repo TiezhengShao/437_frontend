@@ -10,8 +10,7 @@
     <b-card-text>
       <h2 id="item-title">{{ title }}</h2>
       <p id="item-text">{{ text }}</p>
-      <h1>"{{ $route.params.id }}"</h1>
-      <b-button @click="contactSeller" variant="outline-primary">Ntofiy seller that you are interested</b-button>
+      <b-button @click="contactSeller" variant="outline-primary">Notify seller that you are interested</b-button>
     </b-card-text>
 
   </b-card>
@@ -48,6 +47,8 @@
                     },
                 }).then(response => response.json())
                     .then(data => {
+                        this.title = data.items[0].Title
+                        this.text = data.items[0].Description
                         console.log(data);
                     }).catch(error=>{
                         console.log(error);
