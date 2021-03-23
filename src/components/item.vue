@@ -39,7 +39,7 @@
             //         this.genTable(data);
             //         //this.consoleOut(data);
             //     });
-            console.log("fucking mounted")
+            console.log("item mounted")
         },
         methods: {
             contactSeller() {
