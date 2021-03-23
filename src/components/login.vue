@@ -229,6 +229,13 @@
                     .then(data => {
                         console.log(data);
                         if(type === 1){
+                            // TODO
+
+
+                            // here we have to add user and jwt, modify to show what data backend returns
+                            // localStorage.setItem('user',JSON.stringify(response.data.user))
+                            // localStorage.setItem('jwt',response.data.token)
+
                             this.onSignInSuccess();
                             this.$router.push({ path: '/new' })
                         }else if(type === 2){
