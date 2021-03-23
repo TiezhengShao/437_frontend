@@ -234,10 +234,10 @@
 
                             // here we have to add user and jwt, modify to show what data backend returns
                             // localStorage.setItem('user',JSON.stringify(response.data.user))
-                            // localStorage.setItem('jwt',response.data.token)
+                            localStorage.setItem('jwt',data.Token)
 
                             this.onSignInSuccess();
-                            this.$router.push({ path: '/new' })
+                            this.$router.push({ path: '/browse' })
                         }else if(type === 2){
                             this.$bvModal.hide('modal-sign-up');
                             this.showMsgBox('Your Account has been created', 'A verification e-mail should has been sent to your' +
