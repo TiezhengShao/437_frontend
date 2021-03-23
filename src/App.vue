@@ -12,7 +12,7 @@
             <li><router-link to="/verify">Verify</router-link></li>
             <li><router-link to="/recovery">Recovery</router-link></li>-->
       <li><router-link to="/upload">Thanks</router-link></li>
-      <li><router-link to="/new-item">New Item</router-link></li>
+      <li><router-link to="/upload">New Item</router-link></li>
       <li><router-link to="/browse">Browse</router-link></li>
     </ul>
   </div>
