@@ -1,7 +1,13 @@
 <template>
     <div>
         <b-navbar toggleable="lg" type="dark" variant="dark" fixed="top">
-            <b-navbar-brand href="#">Watering System Console</b-navbar-brand>
+            <b-navbar-brand href="#">WashU Marketplace</b-navbar-brand>
+
+                <form class="form-inline mt-2 mt-md-0">
+                    <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
+                </form>
+
 
             <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
@@ -10,8 +16,18 @@
                 <!-- Right aligned nav items -->
                 <b-navbar-nav class="ml-auto">
                     <b-navbar-nav>
-                        <b-nav-text class="mr-2" >Current Time:</b-nav-text>
-                        <b-nav-text>&nbsp;{{curr_time}}</b-nav-text>
+
+                        <ul class="navbar-nav mr-auto">
+                            <li class="nav-item">
+                                <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Sell</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Username</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Logout</a>
+                            </li>
+                        </ul>
                     </b-navbar-nav>
                 </b-navbar-nav>
             </b-collapse>

@@ -1,5 +1,8 @@
 <template>
   <div id="app">
+
+    <!-- route outlet -->
+    <router-view></router-view>
     <ul>
       <!-- use router-link component for navigation. -->
       <!-- specify the link by passing the `to` prop. -->
@@ -10,8 +13,6 @@
       <li><router-link to="/thanks">Thanks</router-link></li>
       <li><router-link to="/browse">Browse</router-link></li>
     </ul>
-    <!-- route outlet -->
-    <router-view></router-view>
   </div>
 </template>
 
