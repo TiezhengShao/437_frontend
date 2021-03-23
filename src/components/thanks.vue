@@ -1,92 +1,28 @@
 <template>
 <b-container>
+  <body class="text-center">
+  <b-card
+    title="Thanks for contacting the seller"
+    img-src="https://picsum.photos/1600/600/?image=13"
+    img-alt="Image"
+    img-top
+    tag="article"
+    class="mb-2"
+  >
+    <b-card-text>
+      We have sent you an e-mail regarding seller’s information, please contact seller as soon as possible. 
+    </b-card-text>
 
-    <b-alert
-            :show="mainDismissCountDown" dismissible variant="danger" @dismissed="mainDismissCountDown=0" @dismiss-count-down="mainCountDownChanged">
-        {{ errorMsg }}
-    </b-alert>
-
-    <body class="text-center">
-    <form class="form-signin">
-        <img class="mb-4" src="../assets/market-logo.svg" alt="" width="72" height="57">
-        <h1 class="h3 mb-3 font-weight-normal">Welcome to WashU Student Marketplace</h1>
-        <b-input-group append="@wustl.edu">
-
-            <b-form-input id="email-sign-up" v-model="email" placeholder="E-mail address" type="text"  required></b-form-input>
-        </b-input-group>
-        <b-form-input id="input-2" v-model="password" type="password" placeholder="Password" required></b-form-input>
-
-        <div class="form-group d-md-flex">
-            <div class="w-50 text-md-left">
-                <b-link v-b-modal.modal-sign-up href="#foo">Sign me up!</b-link>
-            </div>
-            <div class="w-50 text-md-right">
-                <b-link v-b-modal.modal-pwd-recovery href="#foo">Forget password?</b-link>
-            </div>
-        </div>
-        <b-button variant="primary" class="btn-lg btn-block" @click="onSignInBtnClick()" type="submit">Sign in</b-button>
-
-    </form>
-    </body>
-
-
-
-    <b-modal id="modal-sign-up" ref="modal" title="Sign up" @show="resetSignUpModal" @hidden="resetSignUpModal" @ok="handleOk">
-        <form ref="form" @submit.stop.prevent="handleSubmit">
-            <b-form-group label="WashU E-mail address" label-for="email-sign-up" invalid-feedback="WashU E-mail address is required">
-                <b-input-group append="@wustl.edu">
-                    <b-form-input id="email-sign-up" v-model="emailSignUp"  type="text"  required></b-form-input>
-                </b-input-group>
-            </b-form-group>
-            <b-form-group label="Password" label-for="password-sign-up" invalid-feedback="Password is required">
-                <b-form-input id="password-sign-up" v-model="pwdSignUp" type="password" required></b-form-input>
-            </b-form-group>
-            <b-form-group label="Repeat Password" label-for="passwordR-sign-up" invalid-feedback="Password does not match">
-                <b-form-input id="passwordR-sign-up" v-model="pwdRSignUp" type="password" required></b-form-input>
-            </b-form-group>
-        </form>
-        <b-alert
-                :show="dismissCountDown" dismissible variant="danger" @dismissed="dismissCountDown=0" @dismiss-count-down="countDownChanged">
-            {{ errorMsg }}
-        </b-alert>
-    </b-modal>
-
-    <b-modal id="modal-pwd-recovery" ref="modal" title="Forget Password" @show="resetPRModal" @hidden="resetPRModal" @ok="handlePROk">
-        <form ref="form" @submit.stop.prevent="handleSubmit">
-            <b-form-group label="WashU E-mail address" label-for="email-PR">
-                <b-input-group append="@wustl.edu">
-                    <b-form-input id="email-PR" v-model="emailPR"  type="text"  required></b-form-input>
-                </b-input-group>
-            </b-form-group>
-        </form>
-    </b-modal>
-
-
+  </b-card>
+</body>
 </b-container>
 
 </template>
 
 <script>
     export default {
-        name: "login",
-        data() {
-            return {
-                email:'',
-                password:'',
-                emailSignUp:'',
-                pwdSignUp:'',
-                pwdRSignUp:'',
-                emailPR:'',
-                errorMsg:'',
-                dismissSecs: '',
-                dismissCountDown: 0,
-                mainDismissSecs: 5,
-                mainDismissCountDown: 0,
-                MsgBox: '',
-            }
-        },
-
-        methods:{
+        name: "thanks",
+        methods: {
             showMsgBox(title, content) {
                 this.boxOne = '';
                 this.$bvModal.msgBoxOk(content, {
@@ -152,15 +88,6 @@
                 return false;
 
                 },
-            checkSignInForm(){
-                if(this.email.length >= 1 && this.password.length >= 3) {
-                    console.log("Check SignIn successful");
-                    return true;
-                }
-                console.log("Check SignIn unsuccessful");
-                return false;
-
-            },
             resetSignUpModal() {
                 this.emailSignUp = '';
                 this.pwdSignUp = '';
@@ -184,8 +111,6 @@
             handlePROk(bvModalEvt) {
                 // Prevent modal from closing
                 if (this.checkSignupForm() === false) {
-                    var json = {"cmd": "getRealTime","val":this.emailPR};
-                    this.fetchData(json);
                     this.showMsgBox('Requested E-mail Sent', 'If you have an account associated with this address, you will receive an temporary password via e-mail shortly. ');
                 } else {
                     bvModalEvt.preventDefault();
@@ -193,9 +118,8 @@
             }
             ,
             onSignInBtnClick(){
-                //console.log(this.email);
-                var aClickJSON = {"cmd": "getRealTime","val":this.email};
-                this.fetchData(aClickJSON);
+                console.log(this.email);
+                //this.fetchData();
                 this.onSignInError();
             },
             onSignInError(){
@@ -203,16 +127,14 @@
                 this.showMainAlert();
             }
         ,
-            fetchData(json){
-                console.log(json);
-
+            fetchData(){
+                var aClickJSON = {"cmd": "getRealTime","val":1};
                 fetch('https://webhook.site/30ff11fd-2a73-455e-9469-32109732faf5', {
                     method: 'post',
-                    body: JSON.stringify(json)
+                    body: JSON.stringify(aClickJSON)
                 }).then(response => response.json())
                     .then(data => {
-                        console.log(data);
-                        console.log('asd')
+                        this.genTable(data);
                         //this.consoleOut(data);
                     });
             },
