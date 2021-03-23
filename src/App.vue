@@ -7,19 +7,17 @@
       <!-- use router-link component for navigation. -->
       <!-- speccify the link by passing the `to` prop. -->
       <!-- `<router-link>` will be rendered as an `<a>` tag by default -->
-      <li><router-link to="/login">Login</router-link></li>
-      <li><router-link to="/pr">Password Reset</router-link></li>
-      <li><router-link to="/new">New Item</router-link></li>
-      <li><router-link to="/item/:id">Item</router-link></li>
-      <li><router-link to="/thanks">Thanks</router-link></li>
-      <li><router-link to="/browse">Browse</router-link></li>
+      <li v-if="$router.currentRoute.path == '/login'"><router-link to="/login"  >Login</router-link></li>
+      <li v-if="$router.currentRoute.path != '/login'"><router-link to="/new" >New Item</router-link></li>
+      <li v-if="false"><router-link to="/item/:id" >Item</router-link></li>
+      <li v-if="false"><router-link to="/thanks" >Thanks</router-link></li>
+      <li v-if="$router.currentRoute.path != '/login'"><router-link to="/browse" >Browse</router-link></li>
     </ul>
   </div>
 </template>
 
 <script>
 import login from "@/components/login";
-import pwdRst from "@/components/pwdRst";
 import thanks from "@/components/thanks";
 import browse from "@/components/browse";
 import newItem from "@/components/newItem";
@@ -31,7 +29,7 @@ Vue.use(VueRouter);
 
 const routes = [
   {path: '/login', component: login, meta: {guest: true}},
-   {path: '/pr', component: pwdRst},
+  // {path: '/verify', component: verify},
   {path: '/item/:id', component: item, meta: {requiresAuth: true}},
   {path: '/thanks', component: thanks, meta: {requiresAuth: true}},
   {path: '/new', component: newItem, meta: {requiresAuth: true}},
@@ -45,27 +43,27 @@ const router = new VueRouter({
 
 // restricts access based on jwt token
 
-// router.beforeEach((to, from, next) => {
-//     if(to.matched.some(record => record.meta.requiresAuth)) {
-//         if (localStorage.getItem('jwt') == null) {
-//             next({
-//                 path: '/login',
-//                 params: { nextUrl: to.fullPath }
-//             })
-//         } else {
-//             next();
-//         }
-//     } else if(to.matched.some(record => record.meta.guest)) {
-//         if(localStorage.getItem('jwt') == null){
-//             next()
-//         }
-//         else{
-//             next({ path: '/browse'})
-//         }
-//     } else {
-//         next() 
-//     }
-// })
+router.beforeEach((to, from, next) => {
+    if(to.matched.some(record => record.meta.requiresAuth)) {
+        if (localStorage.getItem('jwt') == null) {
+            next({
+                path: '/login',
+                params: { nextUrl: to.fullPath }
+            })
+        } else {
+            next();
+        }
+    } else if(to.matched.some(record => record.meta.guest)) {
+        if(localStorage.getItem('jwt') == null){
+            next()
+        }
+        else{
+            next({ path: '/browse'})
+        }
+    } else {
+        next() 
+    }
+})
 
 export default {
   router

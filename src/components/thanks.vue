@@ -10,7 +10,7 @@
     class="mb-2"
   >
     <b-card-text>
-      We have sent you an e-mail regarding seller’s information, please contact seller as soon as possible. 
+      We have sent seller an e-mail with your information, wait to be contacted. 
       
       <br/>
       <b-button @click="renderBrowse" variant="outline-primary">Go back to Browse</b-button>

@@ -24,7 +24,7 @@
               <b-form-textarea
                 id="textarea"
                 v-model="text"
-                placeholder="Enter item description"
+                placeholder="Enter item description and contact information"
                 rows="3"
                 max-rows="6"
                 required
@@ -53,18 +53,24 @@ export default {
     onSubmit(event) {
       event.preventDefault();
       let json = {
-        //   file: this.file1,
-          text: this.text,
-          title: this.title}
-      alert(JSON.stringify(json));
+          description: this.text,
+          title: this.title,
+          tags: ["all", Math.random().toString().substr(2, 8)],
+          Token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVaWQiOjEsIlJvbGUiOiJ1c2VyIiwiU2NvcGUiOiJhY3RpdmF0aW9uIiwiaWF0IjoxNjE2NTE2MTUxLCJleHAiOjE2MTY2MDI1NTF9.lRFmpDWgEFTW5Zc9IJuvwXSKTKTZg8KFu1mBcUIs-kM"}
+        //   Token: localStorage.getItem('jwt')}
       console.log(json);
       this.sendItem(json);
     },
     sendItem(json) {
+        // console.log(json)
+        // this.$router.push({ path: "/browse" }).then(this.$forceUpdate());
          fetch('http://165.232.138.223:8080/item/upload', {
              method:"post",
-             body: JSON.stringify(json)
-         }).then((response) => response.json()).then((data)=> {
+             body: JSON.stringify(json),
+             headers: {
+                'Content-Type': 'application/json'
+            },
+         }).then((data)=> {
             console.log(data);
             this.$router.push({ path: "/browse" }).then(this.$forceUpdate());
          })

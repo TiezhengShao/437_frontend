@@ -11,7 +11,7 @@
       <h2 id="item-title">{{ title }}</h2>
       <p id="item-text">{{ text }}</p>
       <h1>"{{ $route.params.id }}"</h1>
-      <b-button @click="contactSeller" variant="outline-primary">Contact seller</b-button>
+      <b-button @click="contactSeller" variant="outline-primary">Ntofiy seller that you are interested</b-button>
     </b-card-text>
 
   </b-card>
@@ -30,18 +30,30 @@
             }
         },
         mounted() {
-            // var aClickJSON = {"cmd": "getRealTime","val":1};
-            // fetch('https://webhook.site/30ff11fd-2a73-455e-9469-32109732faf5', {
-            //     method: 'post',
-            //     body: JSON.stringify(aClickJSON)
-            // }).then(response => response.json())
-            //     .then(data => {
-            //         this.genTable(data);
-            //         //this.consoleOut(data);
-            //     });
-            console.log("item mounted")
+                this.fetchData();
+                console.log("item mounted")
         },
         methods: {
+            fetchData(){
+                let json = {Tags: [this.$route.params.id]}
+                console.log(JSON.stringify(json));
+                var link = 'http://165.232.138.223:8080/item/get';
+                console.log('link:' + link);
+
+                fetch(link, {
+                    method: 'POST',
+                    body: JSON.stringify(json),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                }).then(response => response.json())
+                    .then(data => {
+                        console.log(data);
+                    }).catch(error=>{
+                        console.log(error);
+                    }
+                )
+            },
             contactSeller() {
                 // fetch('http://165.232.138.223:8080/item/upload', {
                 //     method:"post",
@@ -52,8 +64,7 @@
                 // })
                 console.log({ id: this.$route.params.id });
                 this.$router.push({ path: "/thanks" }).then(this.$forceUpdate())
-            },
-            
+            }
         }
     }
 </script>
