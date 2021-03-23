@@ -59,6 +59,10 @@
                 </b-input-group>
             </b-form-group>
         </form>
+        <b-alert
+                :show="prDismissCountDown" dismissible variant="danger" @dismissed="prDismissCountDown=0" @dismiss-count-down="prCountDownChanged">
+            {{ errorMsg }}
+        </b-alert>
     </b-modal>
 
 
@@ -84,6 +88,8 @@
                 dismissCountDown: 0,
                 mainDismissSecs: 5,
                 mainDismissCountDown: 0,
+                prDismissSecs: 5,
+                prDismissCountDown: 0,
                 MsgBox: '',
             }
         },
@@ -114,6 +120,12 @@
             },
             showMainAlert() {
                 this.mainDismissCountDown = this.mainDismissSecs
+            },
+            prCountDownChanged(prDismissCountDown) {
+                this.prDismissCountDown = prDismissCountDown
+            },
+            showPRAlert() {
+                this.prDismissCountDown = this.prDismissSecs
             },
             checkSignupForm(){
                 if(this.emailSignUp.length >= 1){
@@ -186,12 +198,12 @@
             },
             handlePROk(bvModalEvt) {
                 // Prevent modal from closing
-                if (this.checkSignupForm() === false) {
-                    var json = {"cmd": "getRealTime","val":this.emailPR};
-                    this.fetchData(json);
-                    this.showMsgBox('Requested E-mail Sent', 'If you have an account associated with this address, you will receive an temporary password via e-mail shortly. ');
+                if (this.checkPRForm() === true) {
+                    this.getCloudDataGET(this.emailPR);
                 } else {
                     bvModalEvt.preventDefault();
+                    this.errorMsg = 'Please enter a valid e-mail address. ';
+                    this.showPRAlert();
                 }
             }
             ,
@@ -255,17 +267,19 @@
 
                 );
             },
-            getCloudData(json){
-                console.log(JSON.stringify(json));
-                axios.post("http://165.232.138.223:8080/auth/user/login", JSON.stringify(json),
-                    {
-                    headers: {
-                        'Content-Type': 'application/json',}
-                    })
-                    .then(response => this.articleId = response.data)
+
+            getCloudDataGET(data){
+                var link = 'http://165.232.138.223:8080/auth/user/recover?username=' + data;
+                console.log('link:' + link);
+                axios.get(link)
+                    .then((response) =>{
+                        console.log(response);
+                        this.showMsgBox('Requested E-mail Sent', 'If you have an account associated with this address, you will receive an temporary password via e-mail shortly. ');
+                        }
+                    )
                     .catch(error => {
                         this.errorMessage = error.message;
-                        console.error("There was an error!", error);
+                        console.error("error: ", error);
                     });
             }
             ,
