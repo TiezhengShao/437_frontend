@@ -17,12 +17,13 @@
 </template>
 
 <script>
-import login from "@/components/login";
+  import Vue from 'vue';
+  import login from "@/components/login";
+  import itemUpload from "@/components/itemUpload";
 import thanks from "@/components/thanks";
 import browse from "@/components/browse";
 import newItem from "@/components/newItem";
 import item from "@/components/item";
-import Vue from 'vue';
 import VueRouter from 'vue-router';
 
 Vue.use(VueRouter);
@@ -30,6 +31,8 @@ Vue.use(VueRouter);
 const routes = [
   {path: '/login', component: login, meta: {guest: true}},
   // {path: '/verify', component: verify},
+  {path: '/new', component: itemUpload, meta: {requiresAuth: false}},
+
   {path: '/item/:id', component: item, meta: {requiresAuth: true}},
   {path: '/thanks', component: thanks, meta: {requiresAuth: true}},
   {path: '/new', component: newItem, meta: {requiresAuth: true}},
