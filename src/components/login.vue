@@ -247,7 +247,9 @@
 
                             // here we have to add user and jwt, modify to show what data backend returns
                             // localStorage.setItem('user',JSON.stringify(response.data.user))
-                            localStorage.setItem('jwt',data.Token)
+                            var now = new Date().getTime();
+                            localStorage.setItem('expire',now);
+                            localStorage.setItem('jwt',data.Token);
 
                             this.onSignInSuccess();
                             this.$router.push({ path: '/browse' })

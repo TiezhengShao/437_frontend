@@ -52,13 +52,14 @@ export default {
   methods: {
     onSubmit(event) {
       event.preventDefault();
+      var token = localStorage.getItem('jwt');
       let json = {
           description: this.text,
           title: this.title,
           tags: ["all", Math.random().toString().substr(2, 8)],
-          Token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVaWQiOjEsIlJvbGUiOiJ1c2VyIiwiU2NvcGUiOiJhY3RpdmF0aW9uIiwiaWF0IjoxNjE2NTE2MTUxLCJleHAiOjE2MTY2MDI1NTF9.lRFmpDWgEFTW5Zc9IJuvwXSKTKTZg8KFu1mBcUIs-kM"}
+          Token: token,};
         //   Token: localStorage.getItem('jwt')}
-      console.log(json);
+      console.log("JWT" + localStorage.getItem('jwt'));
       this.sendItem(json);
     },
     sendItem(json) {
