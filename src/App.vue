@@ -15,6 +15,7 @@
       <li v-if="false"><router-link to="/thanks" >Thanks</router-link></li>
       <li v-if="$router.currentRoute.path != '/login'  && $router.currentRoute.path != '/'"><router-link to="/browse" >Browse</router-link></li>
       <li v-if="$router.currentRoute.path != '/login'  && $router.currentRoute.path != '/'"><router-link to="/main" >Main</router-link></li>
+      <li v-if="$router.currentRoute.path != '/login'  && $router.currentRoute.path != '/'"><router-link to="/detail" >Item Detail</router-link></li>
       <li v-if="$router.currentRoute.path != '/login'" @click="onLogoutClick()" > <router-link to="/login" >Logout</router-link></li>
 
     </ul>
@@ -30,6 +31,7 @@ import thanks from "@/components/thanks";
 import browse from "@/components/browse";
 import newItem from "@/components/newItem";
 import item from "@/components/item";
+import itemDetail from "@/components/itemDetail";
 import VueRouter from 'vue-router';
 
 Vue.use(VueRouter);
@@ -43,7 +45,8 @@ const routes = [
   {path: '/thanks', component: thanks, meta: {requiresAuth: true}},
   {path: '/newOld', component: newItem, meta: {requiresAuth: true}},
   {path: '/browse', component: browse, meta: {requiresAuth: true}},
-  {path: '/main', component: main, meta: {requiresAuth: false}}
+  {path: '/main', component: main, meta: {requiresAuth: false}},
+  {path: '/detail', component: itemDetail, meta: {requiresAuth: false}}
 ];
 
 const router = new VueRouter({

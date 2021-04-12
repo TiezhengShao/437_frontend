@@ -4,7 +4,6 @@
 
         <b-container>
             <!-- Stack the columns on mobile by making one full-width and the other half-width -->
-
             <b-row  class="pt-4">
                 <b-col cols="12" md="8">
                     <b-container class="mt-3" >
@@ -16,9 +15,6 @@
 
                                 <b-button v-if="hasImage" variant="danger" class="ml-3" @click="clearImage">Clear image</b-button>
                             </div>
-
-
-
 
 <!--                            <b-button :disabled="!hasImage" variant="primary" type="submit">Upload image</b-button>-->
                         </b-form>

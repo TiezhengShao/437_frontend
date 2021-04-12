@@ -109,7 +109,7 @@
                 pwdPwdRst:'',
                 pwdRPwdRst:'',
                 errorMsg:'',
-                dismissSecs: '',
+                dismissSecs: 5,
                 dismissCountDown: 0,
                 mainDismissSecs: 5,
                 mainDismissCountDown: 0,
