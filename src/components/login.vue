@@ -59,9 +59,30 @@
                     <b-form-input id="email-PR" v-model="emailPR"  type="text"  required></b-form-input>
                 </b-input-group>
             </b-form-group>
+            <div class="w-50 text-md-left">
+                <b-link v-b-modal.modal-pwd-reset href="#foo">Already get a token?</b-link>
+            </div>
         </form>
         <b-alert
                 :show="prDismissCountDown" dismissible variant="danger" @dismissed="prDismissCountDown=0" @dismiss-count-down="prCountDownChanged">
+            {{ errorMsg }}
+        </b-alert>
+    </b-modal>
+
+    <b-modal id="modal-pwd-reset" ref="modal" title="Reset Your Password" @show="resetPRstModal" @hidden="resetPRstModal" @ok="handlePwdRstROk">
+        <form ref="form" @submit.stop.prevent="handleSubmit">
+            <b-form-group label="Token" label-for="token-pwd-rst">
+                <b-form-input id="token-pwd-rst" v-model="tokenPwdRst" type="text" autocomplete="off" required></b-form-input>
+            </b-form-group>
+            <b-form-group label="Password" label-for="password-pwd-rst">
+                <b-form-input id="password-pwd-rst" v-model="pwdPwdRst" type="password" autocomplete="off" required></b-form-input>
+            </b-form-group>
+            <b-form-group label="Repeat Password" label-for="passwordR-pwd-rst">
+                <b-form-input id="passwordR-pwd-rst" v-model="pwdRPwdRst" type="password" autocomplete="off" required></b-form-input>
+            </b-form-group>
+        </form>
+        <b-alert
+                :show="pRstDismissCountDown" dismissible variant="danger" @dismissed="pRstDismissCountDown=0" @dismiss-count-down="pRstCountDownChanged">
             {{ errorMsg }}
         </b-alert>
     </b-modal>
@@ -84,6 +105,9 @@
                 pwdSignUp:'',
                 pwdRSignUp:'',
                 emailPR:'',
+                tokenPwdRst:'',
+                pwdPwdRst:'',
+                pwdRPwdRst:'',
                 errorMsg:'',
                 dismissSecs: '',
                 dismissCountDown: 0,
@@ -91,6 +115,8 @@
                 mainDismissCountDown: 0,
                 prDismissSecs: 5,
                 prDismissCountDown: 0,
+                pRstDismissSecs: 5,
+                pRstDismissCountDown: 0,
                 MsgBox: '',
             }
         },
@@ -128,6 +154,12 @@
             showPRAlert() {
                 this.prDismissCountDown = this.prDismissSecs
             },
+            pRstCountDownChanged(pRstDismissCountDown) {
+                this.pRstDismissCountDown = pRstDismissCountDown
+            },
+            showPRstAlert() {
+                this.pRstDismissCountDown = this.pRstDismissSecs
+            },
             checkSignupForm(){
                 if(this.emailSignUp.length >= 1){
                     if(this.pwdRSignUp.length >= 3 ){
@@ -154,6 +186,36 @@
                     this.errorMsg = 'Please enter a valid e-mail address';
                     console.log("Check unsuccessful");
                     this.showAlert();
+                    return false;
+                }
+
+            },
+            checkPwdRstForm(){
+                if(this.tokenPwdRst.length >= 10){
+                    if(this.pwdPwdRst.length >= 3 ){
+                        if(this.pwdPwdRst === this.pwdRPwdRst){
+                            console.log("Check successful");
+                            return true;
+                        }
+                        else {
+                            this.errorMsg = 'Password does not match';
+                            console.log("Check unsuccessful");
+                            this.showPRstAlert();
+                            return false;
+                        }
+                    }
+                    else {
+                        this.errorMsg = 'Password must be 3 character or longer';
+                        console.log("Check unsuccessful");
+                        this.showPRstAlert();
+                        return false;
+                    }
+
+                }
+                else {
+                    this.errorMsg = 'Please enter a valid token in your e-mail';
+                    console.log("Check unsuccessful");
+                    this.showPRstAlert();
                     return false;
                 }
 
@@ -186,6 +248,12 @@
                 this.emailPR = '';
                 this.errorMsg = '';
             },
+            resetPRstModal() {
+                this.tokenPwdRst = '';
+                this.pwdPwdRst = '';
+                this.pwdRPwdRst = '';
+                this.errorMsg = '';
+            },
             handleOk(bvModalEvt) {
                 // Prevent modal from closing
                 bvModalEvt.preventDefault();
@@ -206,6 +274,17 @@
                     this.errorMsg = 'Please enter a valid e-mail address. ';
                     this.showPRAlert();
                 }
+            },
+            handlePwdRstROk(bvModalEvt) {
+                // Prevent modal from closing
+                bvModalEvt.preventDefault();
+                if(this.checkPwdRstForm() === true){
+                    //var signUpJSON = {"LoginName": this.emailSignUp,"HashedPassword":this.pwdSignUp};
+                    //this.fetchData(2,signUpJSON);
+                }
+                else {
+                    bvModalEvt.preventDefault();
+                }
             }
             ,
             onSignInBtnClick(){
@@ -215,7 +294,7 @@
                 //this.onSignInError();
             },
             onSignInError(){
-                this.errorMsg = 'E-mail address or password does not match or record, please try again';
+                this.errorMsg = 'Login certificate error or you have not verified your account yet, please try again';
                 this.showMainAlert();
             },
             onSignInSuccess(){
@@ -223,7 +302,7 @@
                 this.showMainAlert();
             }
         ,
-            // type 1->sign in, 2->sign up, 3->Password Recovery
+            // type 1->sign in, 2->sign up, 3->Password Recovery, 4->Password Reset
             fetchData(type, json){
                 console.log(JSON.stringify(json));
                 var link = 'http://165.232.138.223:8080/auth/user/login';
@@ -257,6 +336,8 @@
                             this.$bvModal.hide('modal-sign-up');
                             this.showMsgBox('Your Account has been created', 'A verification e-mail should has been sent to your' +
                                 ' Washington University e-mail address. Please Complete verification as soon as possible. ');
+                        }else if(type === 4){
+                            console.log("Password recovery successful.")
                         }
                     }).catch(error=>{
                         console.log(error);
@@ -265,6 +346,8 @@
                         } else if(type === 2){
                             this.errorMsg = 'Account already exist. ';
                             this.showAlert();
+                        } else if(type === 4){
+                            console.log("Password recovery server error response.")
                         }
                         },
 

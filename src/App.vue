@@ -14,6 +14,7 @@
       <li v-if="false"><router-link to="/item/:id" >Item</router-link></li>
       <li v-if="false"><router-link to="/thanks" >Thanks</router-link></li>
       <li v-if="$router.currentRoute.path != '/login'  && $router.currentRoute.path != '/'"><router-link to="/browse" >Browse</router-link></li>
+      <li v-if="$router.currentRoute.path != '/login'  && $router.currentRoute.path != '/'"><router-link to="/main" >Main</router-link></li>
       <li v-if="$router.currentRoute.path != '/login'" @click="onLogoutClick()" > <router-link to="/login" >Logout</router-link></li>
 
     </ul>
@@ -24,6 +25,7 @@
   import Vue from 'vue';
   import login from "@/components/login";
   import itemUpload from "@/components/itemUpload";
+  import main from "@/components/main";
 import thanks from "@/components/thanks";
 import browse from "@/components/browse";
 import newItem from "@/components/newItem";
@@ -40,7 +42,8 @@ const routes = [
   {path: '/item/:id', component: item, meta: {requiresAuth: true}},
   {path: '/thanks', component: thanks, meta: {requiresAuth: true}},
   {path: '/newOld', component: newItem, meta: {requiresAuth: true}},
-  {path: '/browse', component: browse, meta: {requiresAuth: true}}
+  {path: '/browse', component: browse, meta: {requiresAuth: true}},
+  {path: '/main', component: main, meta: {requiresAuth: false}}
 ];
 
 const router = new VueRouter({
@@ -92,6 +95,7 @@ export default {
     onLogoutClick(){
       localStorage.clear();
       console.log("session cleared, logged out! ");
+      window.location.reload();
     }
   }
 
