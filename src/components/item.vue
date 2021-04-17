@@ -34,7 +34,7 @@
         },
         methods: {
             fetchData(){
-                let json = {Tags: [this.$route.params.id]}
+                let json = {Tags: [this.$route.params.id]};
                 console.log(JSON.stringify(json));
                 var link = 'http://165.232.138.223:8080/item/get';
                 console.log('link:' + link);

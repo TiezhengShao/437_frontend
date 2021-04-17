@@ -40,7 +40,7 @@
                 this.$router.push({ path: "/item/"+id }).then(this.$forceUpdate());
             },
             fetchData(){
-                let json = {Tags: ["all"]}
+                let json = {FuzzyTitle : ''};
                 console.log(JSON.stringify(json));
                 var link = 'http://165.232.138.223:8080/item/get';
                 console.log('link:' + link);
@@ -54,7 +54,7 @@
                 }).then(response => response.json())
                     .then(data => {
                         console.log(data);
-                        this.items = data.items;
+                        this.items = data.Items;
                     }).catch(error=>{
                         console.log(error);
                     }

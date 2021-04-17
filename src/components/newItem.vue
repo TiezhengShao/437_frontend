@@ -60,7 +60,8 @@ export default {
           Token: token,};
         //   Token: localStorage.getItem('jwt')}
       console.log("JWT" + localStorage.getItem('jwt'));
-      this.sendItem(json);
+      console.log(JSON.stringify(json));
+      //this.sendItem(json);
     },
     sendItem(json) {
         // console.log(json)
@@ -73,7 +74,7 @@ export default {
             },
          }).then((data)=> {
             console.log(data);
-            this.$router.push({ path: "/browse" }).then(this.$forceUpdate());
+            //this.$router.push({ path: "/browse" }).then(this.$forceUpdate());
          })
     }
   },

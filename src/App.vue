@@ -26,7 +26,7 @@
   import Vue from 'vue';
   import login from "@/components/login";
   import itemUpload from "@/components/itemUpload";
-  import main from "@/components/main";
+  import main from "@/components/itemBrowse";
 import thanks from "@/components/thanks";
 import browse from "@/components/browse";
 import newItem from "@/components/newItem";

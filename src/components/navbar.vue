@@ -25,7 +25,7 @@
                                 <a class="nav-link" href="#">Username</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Logout</a>
+                                <a class="nav-link"  @click="onLogoutClick()" href="#">Logout</a>
                             </li>
                         </ul>
                     </b-navbar-nav>
@@ -47,12 +47,11 @@
         created() {
             setInterval(this.getNow, 1000);
         },
-        methods: {
-            getNow: function() {
-                const today = new Date();
-                const date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
-                const time = today.getHours() + ":" + (today.getMinutes()<10?'0':'') + today.getMinutes() + ":" + (today.getSeconds()<10?'0':'') + today.getSeconds();
-                this.curr_time = date + ' ' + time;
+        methods:{
+            onLogoutClick(){
+                localStorage.clear();
+                console.log("session cleared, logged out! ");
+                window.location.reload();
             }
         }
     }

@@ -46,6 +46,7 @@
                 dismissSecs: 5,
                 dismissCountDown: 0,
                 submitMsg: '',
+                itemName:''
             }
         },
         methods:{
