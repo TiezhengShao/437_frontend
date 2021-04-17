@@ -30,7 +30,7 @@
         },
         mounted() {
                 this.fetchData();
-                console.log("item mounted")
+                //console.log("item mounted")
         },
         methods: {
             fetchData(){

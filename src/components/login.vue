@@ -267,10 +267,10 @@
             },
             handlePROk(bvModalEvt) {
                 // Prevent modal from closing
+                bvModalEvt.preventDefault();
                 if (this.checkPRForm() === true) {
                     this.getCloudDataGET(this.emailPR);
                 } else {
-                    bvModalEvt.preventDefault();
                     this.errorMsg = 'Please enter a valid e-mail address. ';
                     this.showPRAlert();
                 }
@@ -279,8 +279,9 @@
                 // Prevent modal from closing
                 bvModalEvt.preventDefault();
                 if(this.checkPwdRstForm() === true){
-                    //var signUpJSON = {"LoginName": this.emailSignUp,"HashedPassword":this.pwdSignUp};
-                    //this.fetchData(2,signUpJSON);
+                    let pwdRstJSON = {"Token": this.tokenPwdRst,"HashedPassword":this.pwdPwdRst};
+                    console.log(pwdRstJSON)
+                    this.fetchData(4,pwdRstJSON);
                 }
                 else {
                     bvModalEvt.preventDefault();
@@ -309,6 +310,9 @@
                 if(type === 2){
                     link = 'http://165.232.138.223:8080/auth/user/signup';
                 }
+                if(type === 4){
+                    link = 'http://165.232.138.223:8080/auth/user/update';
+                }
                 console.log('link:' + link);
 
                 fetch(link, {
@@ -323,7 +327,6 @@
                         if(type === 1){
                             // TODO
 
-
                             // here we have to add user and jwt, modify to show what data backend returns
                             // localStorage.setItem('user',JSON.stringify(response.data.user))
                             var now = new Date().getTime();
@@ -336,8 +339,11 @@
                             this.$bvModal.hide('modal-sign-up');
                             this.showMsgBox('Your Account has been created', 'A verification e-mail should has been sent to your' +
                                 ' Washington University e-mail address. Please Complete verification as soon as possible. ');
-                        }else if(type === 4){
+                        }
+                        else if(type === 4){
                             console.log("Password recovery successful.")
+                        }else if(type === -1){
+                            console.log("Fetch type error")
                         }
                     }).catch(error=>{
                         console.log(error);
@@ -346,7 +352,8 @@
                         } else if(type === 2){
                             this.errorMsg = 'Account already exist. ';
                             this.showAlert();
-                        } else if(type === 4){
+                        }
+                        else if(type === 4){
                             console.log("Password recovery server error response.")
                         }
                         },
@@ -360,12 +367,15 @@
                 axios.get(link)
                     .then((response) =>{
                         console.log(response);
+                        //this.$bvModal.hide('modal-pwd-recovery');
                         this.showMsgBox('Requested E-mail Sent', 'If you have an account associated with this address, you will receive an temporary password via e-mail shortly. ');
                         }
                     )
                     .catch(error => {
                         this.errorMessage = error.message;
                         console.error("error: ", error);
+                        this.errorMsg = 'Server communication error try later';
+                        this.showPRAlert();
                     });
             }
             ,

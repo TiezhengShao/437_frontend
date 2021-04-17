@@ -29,7 +29,7 @@
                             ></b-form-tags>
                         </b-row>
                         <b-row class="pt-1 pb-2">
-                            <b-button block variant="outline-secondary">Apply</b-button>
+                            <b-button block variant="outline-secondary" @click="onFilterApplyClicked()">Apply</b-button>
                         </b-row>
 
                     </b-container>
@@ -41,14 +41,11 @@
                             <div v-for="i in items" :key="i.id" class="card h-100">
                                 <b-img class="card-img-top"  :src="i.thumb" fluid alt="Fluid image"></b-img>
                                 <div class="card-body">
-                                    <h5 class="card-title font-weight-bold"><a href="./detail">{{i.title}}</a></h5>
+                                    <h5 class="card-title font-weight-bold"><a href="#" @click="onItemDetailClick(i.id)">{{i.title}}</a></h5>
                                     <h6 class="card-subtitle mb-2 text-info">{{'$'+i.price}}</h6>
                                     <p class="card-text">{{i.desc}}</p>
                                 </div>
                             </div>
-
-
-
 
                         </b-card-group>
                     </b-col>
@@ -69,7 +66,7 @@
         components: {navbar},
         data(){
             return{
-                filterTag: ['apple', 'orange', 'grape'],
+                filterTag: [],
                 items: []
             }
         },
@@ -81,12 +78,16 @@
             ro(a){
                 return a;
             },
-            makeItemLink(id) {
+            onItemDetailClick(id) {
                 console.log(id);
-                this.$router.push({ path: "/item/"+id }).then(this.$forceUpdate());
+                this.$router.push({ path: "/detail/"+id }).then(this.$forceUpdate());
             },
+            onFilterApplyClicked(){
+
+            }
+            ,
             fetchData(){
-                let json = {FuzzyTitle : ''};
+                let json = {FuzzyTitle : '' };
                 console.log('JSON:'+JSON.stringify(json));
                 var link = 'http://165.232.138.223:8080/item/get';
                 console.log('link:' + link);
@@ -110,13 +111,14 @@
                 console.log(data);
 
                 let output = [];
-                let id = 0;
+                let tag = [];
                 for(let i=0; i< data.length; i++){
                     let record = data[i];
                     let title = "No title";
                     let desc = "No description provided";
                     let thumb = this.getEmptyImage();
                     let price = 0;
+                    let id = null;
                     if(record.Title.length !== 0 ){
                         title = record.Title;
                     }
@@ -131,10 +133,19 @@
                     }else {
                         thumb = "data:image/png;base64," + thumb;
                     }
-                    id += 1;
+                    if(record.ObjId !== 0 ){
+                        id = record.ObjId;
+                    }
+                    if(record.Tags.length > 0){
+                        for(let j =0; j < record.Tags.length ; j++){
+                            tag.push(record.Tags[j]);
+                            console.log("pushed"+tag);
+                        }
+                    }
+
                     output.push({id:id, title:title, desc:desc, thumb:thumb, price:price})
                 }
-                //console.log(output);
+                this.filterTag = [...new Set(tag)];
                 return output;
 
             },

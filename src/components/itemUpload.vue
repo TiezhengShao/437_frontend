@@ -143,7 +143,7 @@
                 },
             }).then((data)=> {
                 console.log(data);
-                this.$router.push({ path: "/main" }).then(this.$forceUpdate());
+                this.$router.push({ path: "/browse" }).then(this.$forceUpdate());
             })
         },
             setImage: function(output) {

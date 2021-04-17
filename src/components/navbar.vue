@@ -19,11 +19,11 @@
 
                         <ul class="navbar-nav mr-auto">
                             <li class="nav-item">
-                                <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Sell</a>
+                                <a class="nav-link " @click="onSellClick()" href="#" tabindex="-1" aria-disabled="true">Sell</a>
                             </li>
-                            <li class="nav-item">
+<!--                            <li class="nav-item">
                                 <a class="nav-link" href="#">Username</a>
-                            </li>
+                            </li>-->
                             <li class="nav-item">
                                 <a class="nav-link"  @click="onLogoutClick()" href="#">Logout</a>
                             </li>
@@ -48,6 +48,9 @@
             setInterval(this.getNow, 1000);
         },
         methods:{
+            onSellClick(){
+                this.$router.push({ path: "/new" }).then(this.$forceUpdate());
+            },
             onLogoutClick(){
                 localStorage.clear();
                 console.log("session cleared, logged out! ");
