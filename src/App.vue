@@ -7,7 +7,7 @@
       <!-- use router-link component for navigation. -->
       <!-- speccify the link by passing the `to` prop. -->
       <!-- `<router-link>` will be rendered as an `<a>` tag by default -->
-      <li v-if="$router.currentRoute.path == '/login' || $router.currentRoute.path == '/'"><router-link to="/login"  >Login</router-link></li>
+      <!--<li v-if="$router.currentRoute.path == '/login' || $router.currentRoute.path == '/'"><router-link to="/login"  >Login</router-link></li>-->
       <li v-if="false"><router-link to="/item/:id" >Item</router-link></li>
       <li v-if="false"><router-link to="/thanks" >Thanks</router-link></li>
 
@@ -38,9 +38,10 @@ import VueRouter from 'vue-router';
 Vue.use(VueRouter);
 
 const routes = [
+  {path: '/', component: login, meta: {guest: true}},
   {path: '/login', component: login, meta: {title:'Market Login',guest: true}},
   // {path: '/verify', component: verify},
-  {path: '/new', component: itemUpload, meta: {title:'WashU MarketPlace',requiresAuth: false}},
+  {path: '/new', component: itemUpload, meta: {title:'WashU MarketPlace',requiresAuth: true}},
 
   //{path: '/item/:id', component: item, meta: {requiresAuth: true}},
   {path: '/thanks', component: thanks, meta: {requiresAuth: true}},

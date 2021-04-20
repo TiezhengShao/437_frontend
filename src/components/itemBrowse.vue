@@ -29,7 +29,7 @@
                             ></b-form-tags>
                         </b-row>
                         <b-row class="pt-1 pb-2">
-                            <b-button block variant="outline-secondary" @click="onFilterApplyClicked()">Apply</b-button>
+                            <b-button block variant="outline-success" @click="onFilterApplyClicked()">Apply</b-button>
                         </b-row>
 
                     </b-container>
@@ -38,7 +38,7 @@
                     <b-col class="col-10">
                         <b-card-group  columns>
                             <div v-for="i in items" :key="i.id" class="card h-100">
-                                <b-img class="card-img-top"  :src="i.thumb" fluid alt="Fluid image"></b-img>
+                                <b-img @click="onItemDetailClick(i.id)" class="card-img-top"  :src="i.thumb" fluid alt="Fluid image"></b-img>
                                 <div class="card-body">
                                     <h5 class="card-title font-weight-bold"><a href="#" @click="onItemDetailClick(i.id)">{{i.title}}</a></h5>
                                     <h6 class="card-subtitle mb-2 text-info">{{'$'+i.price}}</h6>
