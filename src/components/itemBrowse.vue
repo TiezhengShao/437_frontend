@@ -12,8 +12,8 @@
                         <b-row class="pb-2 border-top">
                             <H6 class="pt-1">Price Range</H6>
                             <b-input-group size="sm" prepend="$">
-                                <b-form-input class="mr-2">{{priceLow}}</b-form-input>-
-                                <b-form-input class="ml-2">{{priceHigh}}</b-form-input>
+                                <b-form-input v-model="priceLow" class="mr-2"></b-form-input>-
+                                <b-form-input v-model="priceHigh" class="ml-2"></b-form-input>
                             </b-input-group>
                         </b-row>
                         <b-row class="pt-1 pb-2 border-top">
