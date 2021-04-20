@@ -1,6 +1,6 @@
 <template>
     <div>
-        <navbar></navbar>
+        <navbar @search_event="search"></navbar>
         <b-container fluid>
 
         <b-row class="">
@@ -12,8 +12,8 @@
                         <b-row class="pb-2 border-top">
                             <H6 class="pt-1">Price Range</H6>
                             <b-input-group size="sm" prepend="$">
-                                <b-form-input class="mr-2"></b-form-input>-
-                                <b-form-input class="ml-2"></b-form-input>
+                                <b-form-input v-model="priceLow" class="mr-2"></b-form-input>-
+                                <b-form-input v-model="priceHigh" class="ml-2"></b-form-input>
                             </b-input-group>
                         </b-row>
                         <b-row class="pt-1 pb-2 border-top">
@@ -67,30 +67,55 @@
         data(){
             return{
                 filterTag: [],
-                items: []
+                items: [],
+                keyword:'',
+                priceLow:null,
+                priceHigh:null,
             }
         },
         mounted() {
-            this.fetchData();
-            console.log("browse mounted")
+            let keyword = this.$route.query.keyword;
+            if(keyword.length > 0){
+                this.keyword = keyword
+            }
+            this.fetchData({FuzzyTitle : this.keyword });
         },
         methods: {
-            ro(a){
-                return a;
-            },
+            search(keyword){
+                if(keyword === null){
+                    this.keyword = '';
+                } else{
+                    this.keyword = keyword;
+                }
+                this.fetchData({FuzzyTitle : this.keyword });
+                //console.log('navbar keyword:'+ keyword);
+                //console.log('local keyword:'+ this.keyword);
+
+            }
+            ,
             onItemDetailClick(id) {
                 console.log(id);
                 this.$router.push({ path: "/detail/"+id }).then(this.$forceUpdate());
             },
             onFilterApplyClicked(){
+                let minPrice = 0;
+                let maxPrice = 999999999999;
+                if(this.priceLow !== null){
+                    minPrice = parseFloat(this.priceLow);
+                }
+                if(this.priceHigh !== null){
+                    maxPrice = parseFloat(this.priceHigh);
+                }
+                let json = {FuzzyTitle : this.keyword, Tags: this.filterTag, PriceLow:minPrice, PriceHigh:maxPrice };
+                this.fetchData(json);
 
             }
             ,
-            fetchData(){
-                let json = {FuzzyTitle : '' };
+            fetchData(json){
+                //let json = {FuzzyTitle : this.keyword };
                 console.log('JSON:'+JSON.stringify(json));
                 var link = 'http://165.232.138.223:8080/item/get';
-                console.log('link:' + link);
+                //console.log('link:' + link);
 
                 fetch(link, {
                     method: 'POST',
@@ -100,7 +125,7 @@
                     },
                 }).then(response => response.json())
                     .then(data => {
-                        //console.log(data);
+                        console.log(data);
                         this.items = this.preProcess(data.Items);
                     }).catch(error=>{
                         console.log(error);
@@ -109,7 +134,7 @@
             },
             preProcess(data){
                 console.log(data);
-
+                if(data === null){return }
                 let output = [];
                 let tag = [];
                 for(let i=0; i< data.length; i++){
@@ -139,7 +164,7 @@
                     if(record.Tags.length > 0){
                         for(let j =0; j < record.Tags.length ; j++){
                             tag.push(record.Tags[j]);
-                            console.log("pushed"+tag);
+                            //console.log("pushed"+tag);
                         }
                     }
 

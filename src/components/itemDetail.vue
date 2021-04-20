@@ -1,6 +1,6 @@
 <template>
     <div>
-        <navbar></navbar>
+        <navbar @detailSearch_event="search"></navbar>
 
         <b-container fluid>
             <!-- Stack the columns on mobile by making one full-width and the other half-width -->
@@ -23,11 +23,17 @@
                         <p>{{itemDesc}}</p>
                     </div>
 
-                        <b-button variant="success" class="btn-lg btn-block mb-3" @click="onContactSellerBtnClick()" type="submit">I'm interested, e-mail seller!</b-button>
+                    <b-button-group>
+                        <b-button variant="outline-success"  @click="onContactSellerBtnClick()" type="submit">Contact Seller</b-button>
+                        <b-dropdown variant="outline-secondary" right text="Edit">
+                            <b-dropdown-item @click="onDelBtnClicked()">Delete</b-dropdown-item>
+                        </b-dropdown>
+
+                    </b-button-group>
 
                     <b-alert
-                            :show="dismissCountDown" dismissible variant="success" @dismissed="dismissCountDown=0" @dismiss-count-down="countDownChanged">
-                        {{ submitMsg }}
+                            :show="dismissCountDown" dismissible :variant="variant" @dismissed="dismissCountDown=0" @dismiss-count-down="countDownChanged">
+                        {{ alertMsg }}
                     </b-alert>
                 </b-col>
             </b-row>
@@ -46,19 +52,35 @@
             return {
                 dismissSecs: 5,
                 dismissCountDown: 0,
-                submitMsg: '',
+                objId:'',
+                token:'',
+                uploaderId:0,
+                alertMsg: '',
                 itemName:'Undefined',
                 itemImage:'',
                 itemPrice:'Undefined',
-                itemDesc:'Undefined'
+                itemDesc:'Undefined',
+                variant : "success",
             }
         },
         mounted() {
-            this.getCloudDataGET(this.$route.params.id);
+            this.objId = this.$route.params.id;
+            this.token = localStorage.getItem('jwt');
+
+            let link = 'http://165.232.138.223:8080/item/detail?obj_id=' + this.objId;
+            this.getCloudDataGET(link);
             //console.log("item mounted")
             console.log(this.$route.params.id);
         },
         methods:{
+            search(keyword){
+                this.$router.push({ path: '/browse' , query:{keyword:keyword}});
+            },
+            onDelBtnClicked(){
+                let json = {Token:this.token, ObjId: this.objId};
+                let link = 'http://165.232.138.223:8080/item/delete';
+                this.fetchData(json, link, 2);
+            },
             countDownChanged(dismissCountDown) {
                 this.dismissCountDown = dismissCountDown
             },
@@ -66,13 +88,14 @@
                 this.dismissCountDown = this.dismissSecs
             },
             onContactSellerBtnClick(){
-                this.submitMsg = "Successful";
-                this.showAlert();
+                let json = {Token:this.token,ItemTitle:this.itemName, UploaderId:parseInt(this.uploaderId) , ObjId: this.objId};
+                let link = 'http://165.232.138.223:8080/item/user/contact';
+                this.fetchData(json, link, 1)
+
             },
-            fetchData(){
-                let json = {Tags: [this.$route.params.id]};
+            fetchData(json, link, type){
+                // type 1:contact, 2:delete
                 console.log(JSON.stringify(json));
-                var link = 'http://165.232.138.223:8080/item/get';
                 console.log('link:' + link);
 
                 fetch(link, {
@@ -84,16 +107,29 @@
                 }).then(response => response.json())
                     .then(data => {
                         console.log(data);
-                        this.title = data.items[0].Title
-                        this.text = data.items[0].Description
-                        console.log(data);
+                        if(type === 1){
+                            this.variant = "success";
+                            this.alertMsg = "Notification e-mail sent, please wait for seller's response. ";
+                            this.showAlert();
+                        }
+                        if(type === 2){
+                            this.$router.push({ path: '/browse' });
+                        }
                     }).catch(error=>{
                         console.log(error);
+                        this.variant = "danger";
+                        if(type === 1){
+                            this.alertMsg = "Server contact error, try again later";
+                        }
+                        if(type === 2){
+                            this.alertMsg = "Cannot delete if not the uploader.";
+                        }
+                        this.showAlert();
+                        //this.variant = "success";
                     }
                 )
             },
-            getCloudDataGET(data){
-                var link = 'http://165.232.138.223:8080/item/detail?obj_id=' + data;
+            getCloudDataGET(link){
                 console.log('link:' + link);
                 axios.get(link)
                     .then((response) =>{
@@ -104,6 +140,8 @@
                                 this.itemName = item.Title;
                                 this.itemPrice = item.NewPrice;
                                 this.itemDesc = item.Description;
+                                this.uploaderId = item.Uploader;
+
                                 if(item.Description.length < 1){
                                     this.itemDesc = "No description provided by uploader."
                                 }

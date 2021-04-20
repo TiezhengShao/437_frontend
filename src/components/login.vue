@@ -279,8 +279,8 @@
                 // Prevent modal from closing
                 bvModalEvt.preventDefault();
                 if(this.checkPwdRstForm() === true){
-                    let pwdRstJSON = {"Token": this.tokenPwdRst,"HashedPassword":this.pwdPwdRst};
-                    console.log(pwdRstJSON)
+                    let pwdRstJSON = {"Token": this.tokenPwdRst.replace(/\s/g, ""),"HashedPassword":this.pwdPwdRst};
+                    //console.log(pwdRstJSON)
                     this.fetchData(4,pwdRstJSON);
                 }
                 else {
@@ -313,7 +313,7 @@
                 if(type === 4){
                     link = 'http://165.232.138.223:8080/auth/user/update';
                 }
-                console.log('link:' + link);
+                //console.log('link:' + link);
 
                 fetch(link, {
                     method: 'POST',
@@ -341,6 +341,8 @@
                                 ' Washington University e-mail address. Please Complete verification as soon as possible. ');
                         }
                         else if(type === 4){
+                            this.$bvModal.hide('modal-pwd-recovery');
+                            this.$bvModal.hide('modal-pwd-reset');
                             console.log("Password recovery successful.")
                         }else if(type === -1){
                             console.log("Fetch type error")
@@ -363,11 +365,11 @@
 
             getCloudDataGET(data){
                 var link = 'http://165.232.138.223:8080/auth/user/recover?username=' + data;
-                console.log('link:' + link);
+                //console.log('link:' + link);
                 axios.get(link)
                     .then((response) =>{
                         console.log(response);
-                        //this.$bvModal.hide('modal-pwd-recovery');
+                        this.$bvModal.hide('modal-pwd-recovery');
                         this.showMsgBox('Requested E-mail Sent', 'If you have an account associated with this address, you will receive an temporary password via e-mail shortly. ');
                         }
                     )

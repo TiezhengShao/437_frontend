@@ -8,12 +8,13 @@
       <!-- speccify the link by passing the `to` prop. -->
       <!-- `<router-link>` will be rendered as an `<a>` tag by default -->
       <li v-if="$router.currentRoute.path == '/login' || $router.currentRoute.path == '/'"><router-link to="/login"  >Login</router-link></li>
-      <li v-if="$router.currentRoute.path != '/login' && $router.currentRoute.path != '/'"><router-link to="/new" >New Item</router-link></li>
       <li v-if="false"><router-link to="/item/:id" >Item</router-link></li>
       <li v-if="false"><router-link to="/thanks" >Thanks</router-link></li>
+
+<!--
+      <li v-if="$router.currentRoute.path != '/login' && $router.currentRoute.path != '/'"><router-link to="/new" >New Item</router-link></li>
       <li v-if="$router.currentRoute.path != '/login'  && $router.currentRoute.path != '/'"><router-link to="/browse" >Browse</router-link></li>
       <li v-if="$router.currentRoute.path != '/login'" @click="onLogoutClick()" > <router-link to="/login" >Logout</router-link></li>
-<!--
       <li v-if="$router.currentRoute.path != '/login'  && $router.currentRoute.path != '/'"><router-link to="/detail" >Item Detail</router-link></li>
       <li v-if="$router.currentRoute.path != '/login'  && $router.currentRoute.path != '/'"><router-link to="/main" >Main</router-link></li>
       <li v-if="$router.currentRoute.path != '/login' && $router.currentRoute.path != '/'"><router-link to="/newOld" >New Item Old(Alpha Version)</router-link></li>-->
