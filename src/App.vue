@@ -38,16 +38,16 @@ import VueRouter from 'vue-router';
 Vue.use(VueRouter);
 
 const routes = [
-  {path: '/login', component: login, meta: {guest: true}},
+  {path: '/login', component: login, meta: {title:'Market Login',guest: true}},
   // {path: '/verify', component: verify},
-  {path: '/new', component: itemUpload, meta: {requiresAuth: false}},
+  {path: '/new', component: itemUpload, meta: {title:'WashU MarketPlace',requiresAuth: false}},
 
   //{path: '/item/:id', component: item, meta: {requiresAuth: true}},
   {path: '/thanks', component: thanks, meta: {requiresAuth: true}},
   {path: '/newOld', component: newItem, meta: {requiresAuth: true}},
   //{path: '/browse', component: browse, meta: {requiresAuth: true}},
-  {path: '/browse', component: main, meta: {requiresAuth: true}},
-  {path: '/detail/:id', component: itemDetail, meta: {requiresAuth: false}}
+  {path: '/browse', component: main, meta: {title:'WashU MarketPlace', requiresAuth: true}},
+  {path: '/detail/:id', component: itemDetail, meta: {title:'WashU MarketPlace', requiresAuth: true}}
 ];
 
 const router = new VueRouter({
@@ -58,7 +58,8 @@ const router = new VueRouter({
 // restricts access based on jwt token
 
 router.beforeEach((to, from, next) => {
-
+  // Set page title to meta
+  document.title = to.meta.title;
   // Login session expire in 1 hour
   var now = new Date().getTime();
   var time = localStorage.getItem('expire');

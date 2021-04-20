@@ -31,7 +31,7 @@
 
                     </b-button-group>
 
-                    <b-alert
+                    <b-alert class="mt-3"
                             :show="dismissCountDown" dismissible :variant="variant" @dismissed="dismissCountDown=0" @dismiss-count-down="countDownChanged">
                         {{ alertMsg }}
                     </b-alert>

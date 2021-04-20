@@ -2,10 +2,10 @@
     <div>
         <navbar @search_event="search"></navbar>
         <b-container fluid>
-
         <b-row class="">
                 <b-col  class="col-2 pt-5">
                     <b-container>
+
                         <b-row class="pb-2">
                             <H3>Filter</H3>
                         </b-row>
@@ -37,7 +37,6 @@
                 </b-col>
                     <b-col class="col-10">
                         <b-card-group  columns>
-
                             <div v-for="i in items" :key="i.id" class="card h-100">
                                 <b-img class="card-img-top"  :src="i.thumb" fluid alt="Fluid image"></b-img>
                                 <div class="card-body">
@@ -46,15 +45,12 @@
                                     <p class="card-text">{{i.desc}}</p>
                                 </div>
                             </div>
-
                         </b-card-group>
                     </b-col>
 
-
             </b-row>
+
         </b-container>
-
-
     </div>
 
 </template>
@@ -75,9 +71,13 @@
         },
         mounted() {
             let keyword = this.$route.query.keyword;
-            if(keyword.length > 0){
-                this.keyword = keyword
+            //console.log('keyword:' + keyword);
+            if(keyword !== undefined){
+                if(keyword.length > 0 ){
+                    this.keyword = keyword
+                }
             }
+            //console.log('this keyword:' + keyword);
             this.fetchData({FuzzyTitle : this.keyword });
         },
         methods: {
