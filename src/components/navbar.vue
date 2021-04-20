@@ -1,6 +1,6 @@
 <template>
     <div>
-        <b-navbar toggleable="lg" type="dark" variant="dark" fixed="top">
+        <b-navbar toggleable="lg" type="dark" variant="info" fixed="top">
             <b-navbar-brand href="#" @click="onTitleClick()">WashU Marketplace</b-navbar-brand>
 
                 <form class="form-inline mt-2 mt-md-0">

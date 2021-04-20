@@ -26,6 +26,7 @@
                                         src="https://img.icons8.com/plasticine/100/000000/image.png"
                                         width="80"
                                         height="80"
+                                        v-if="!hasImage"
                                 >
                                 <path
                                         class="path1"
@@ -33,7 +34,7 @@
                                 ></path>
                             </figure>
                             <span class="upload-caption">{{
-            hasImage ? "Replace" : "Click to upload your item image"
+            hasImage ? "Replace image" : "Click to upload your item image"
           }}</span>
                         </label>
                     </b-container>

@@ -12,8 +12,8 @@
                         <b-row class="pb-2 border-top">
                             <H6 class="pt-1">Price Range</H6>
                             <b-input-group size="sm" prepend="$">
-                                <b-form-input v-model="priceLow" class="mr-2"></b-form-input>-
-                                <b-form-input v-model="priceHigh" class="ml-2"></b-form-input>
+                                <b-form-input class="mr-2">{{priceLow}}</b-form-input>-
+                                <b-form-input class="ml-2">{{priceHigh}}</b-form-input>
                             </b-input-group>
                         </b-row>
                         <b-row class="pt-1 pb-2 border-top">
@@ -29,7 +29,7 @@
                             ></b-form-tags>
                         </b-row>
                         <b-row class="pt-1 pb-2">
-                            <b-button block variant="outline-secondary" @click="onFilterApplyClicked()">Apply</b-button>
+                            <b-button block variant="outline-success" @click="onFilterApplyClicked()">Apply</b-button>
                         </b-row>
 
                     </b-container>
@@ -39,11 +39,11 @@
                         <b-card-group  columns>
 
                             <div v-for="i in items" :key="i.id" class="card h-100">
-                                <b-img class="card-img-top"  :src="i.thumb" fluid alt="Fluid image"></b-img>
+                                <b-img @click="onItemDetailClick(i.id)" class="card-img-top"  :src="i.thumb" fluid alt="Fluid image"></b-img>
                                 <div class="card-body">
                                     <h5 class="card-title font-weight-bold"><a href="#" @click="onItemDetailClick(i.id)">{{i.title}}</a></h5>
-                                    <h6 class="card-subtitle mb-2 text-info">{{'$'+i.price}}</h6>
-                                    <p class="card-text">{{i.desc}}</p>
+                                    <h6 @click="onItemDetailClick(i.id)" class="card-subtitle mb-2 text-info">{{'$'+i.price}}</h6>
+                                    <p @click="onItemDetailClick(i.id)" class="card-text">{{i.desc}}</p>
                                 </div>
                             </div>
 
@@ -74,11 +74,7 @@
             }
         },
         mounted() {
-            let keyword = this.$route.query.keyword;
-            if(keyword.length > 0){
-                this.keyword = keyword
-            }
-            this.fetchData({FuzzyTitle : this.keyword });
+            this.fetchData({FuzzyTitle : "" });
         },
         methods: {
             search(keyword){

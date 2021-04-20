@@ -7,7 +7,6 @@
             <b-row  class="pt-4">
                 <b-col cols="12" md="8">
                     <b-container class="mt-3" >
-                        <h3 class="my-3 font-weight-bold">Item Image</h3>
                         <b-img class="item-image-box" :src="itemImage"  fluid alt="Fluid-grow image" rounded></b-img>
                     </b-container>
                 </b-col>
