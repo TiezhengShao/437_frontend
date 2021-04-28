@@ -332,6 +332,8 @@
                             var now = new Date().getTime();
                             localStorage.setItem('expire',now);
                             localStorage.setItem('jwt',data.Token);
+                            localStorage.setItem('uid',data.Uid);
+
 
                             this.onSignInSuccess();
                             this.$router.push({ path: '/browse' })
@@ -356,6 +358,8 @@
                             this.showAlert();
                         }
                         else if(type === 4){
+                            this.errorMsg = 'We cannot find a record with this token, be sure to remove any space';
+                            this.showPRstAlert();
                             console.log("Password recovery server error response.")
                         }
                         },

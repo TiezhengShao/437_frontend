@@ -116,7 +116,7 @@
                 let token = localStorage.getItem('jwt');
                 let submitImage = [];
                 if(this.imageSrc !== null){
-                    submitImage.push(this.imageSrc.substring(23));
+                    submitImage.push(this.imageSrc.split(",")[1]);
                 }
                 this.itemPrice = parseFloat(this.itemPrice);
                 //console.log(typeof this.itemPrice);
@@ -150,7 +150,7 @@
             setImage: function(output) {
                 this.hasImage = true;
                 this.imageSrc = output;
-                //console.log('Info', output);
+                // console.log('Info', output.split(",")[1]);
                 //console.log('Exif', output.exif);
             },
             countDownChanged(dismissCountDown) {

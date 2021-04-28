@@ -1,55 +1,24 @@
 <template>
     <div>
-        <navbar @search_event="search"></navbar>
+        <navbar></navbar>
         <b-container fluid>
-        <b-row class="">
-                <b-col  class="col-2 pt-5">
-                    <b-container>
-
-                        <b-row class="pb-2">
-                            <H3>Filter</H3>
-                        </b-row>
-                        <b-row class="pb-2 border-top">
-                            <H6 class="pt-1">Price Range</H6>
-                            <b-input-group size="sm" prepend="$">
-                                <b-form-input v-model="priceLow" class="mr-2"></b-form-input>-
-                                <b-form-input v-model="priceHigh" class="ml-2"></b-form-input>
-                            </b-input-group>
-                        </b-row>
-                        <b-row class="pt-1 pb-2 border-top">
-                            <H6 class="pt-1">Tags</H6>
-                            <b-form-tags
-                                    input-id="tags-pills"
-                                    v-model="filterTag"
-                                    tag-variant="secondary"
-                                    tag-pills
-                                    size="sm"
-                                    separator=" "
-                                    placeholder="Remove Unwanted Tag"
-                            ></b-form-tags>
-                        </b-row>
-                        <b-row class="pt-1 pb-2">
-                            <b-button block variant="outline-success" @click="onFilterApplyClicked()">Apply</b-button>
-                        </b-row>
-
-                    </b-container>
-
-                </b-col>
-                    <b-col class="col-10">
-                        <b-card-group  columns>
-                            <div v-for="i in items" :key="i.id" class="card h-100">
-                                <b-img @click="onItemDetailClick(i.id)" class="card-img-top"  :src="i.thumb" fluid alt="Fluid image"></b-img>
-                                <div class="card-body">
-                                    <h5 class="card-title font-weight-bold"><a href="#" @click="onItemDetailClick(i.id)">{{i.title}}</a></h5>
-                                    <h6 class="card-subtitle mb-2 text-info">{{'$'+i.price}}</h6>
-                                    <p class="card-text">{{i.desc}}</p>
-                                </div>
+            <b-modal class="modal-sm" id="no-item-modal" title="No Item Found" ok-only ok-variant="secondary" @ok="handleNoItemOk">
+                <p class="my-4">It looks like you have not posted any item yet. </p>
+            </b-modal>
+            <b-row>
+                <b-col>
+                    <b-card-group deck>
+                        <div v-for="i in items" :key="i.id" class="card h-100">
+                            <b-img @click="onItemDetailClick(i.id)" class="card-img-top"  :src="i.thumb" fluid alt="Fluid image"></b-img>
+                            <div class="card-body">
+                                <h5 class="card-title font-weight-bold"><a href="#" @click="onItemDetailClick(i.id)">{{i.title}}</a></h5>
+                                <h6 class="card-subtitle mb-2 text-info">{{'$'+i.price}}</h6>
+                                <b-button block variant="outline-danger" @click="onItemDeleteClick(i.id)">Delete</b-button>
                             </div>
-                        </b-card-group>
-                    </b-col>
-
+                        </div>
+                    </b-card-group>
+                </b-col>
             </b-row>
-
         </b-container>
     </div>
 
@@ -58,64 +27,45 @@
 <script>
     import navbar from "@/components/navbar";
     export default {
-        name: "itemBrowse",
+        name: "itemList",
         components: {navbar},
         data(){
             return{
-                filterTag: [],
                 items: [],
-                keyword:'',
-                priceLow:null,
-                priceHigh:null,
+                uploader: -1,
+                token:'',
             }
         },
         mounted() {
-            let keyword = this.$route.query.keyword;
-            //console.log('keyword:' + keyword);
-            if(keyword !== undefined){
-                if(keyword.length > 0 ){
-                    this.keyword = keyword
-                }
+            this.token = localStorage.getItem('jwt');
+            this.uploader = localStorage.getItem('uid');
+            // console.log("uploader:" + this.uploader);
+            let link = 'http://165.232.138.223:8080/item/get';
+            if(this.uploader !== null && this.uploader !== -1){
+                // normal case
+                this.fetchData({Uploader : parseInt(this.uploader)}, link, 1);
+
+            } else{
+                this.fetchData({FuzzyTitle : '' }, link, 1);
             }
-            //console.log('this keyword:' + keyword);
-            this.fetchData({FuzzyTitle : this.keyword });
         },
         methods: {
-            search(keyword){
-                if(keyword === null){
-                    this.keyword = '';
-                } else{
-                    this.keyword = keyword;
-                }
-                this.fetchData({FuzzyTitle : this.keyword });
-                //console.log('navbar keyword:'+ keyword);
-                //console.log('local keyword:'+ this.keyword);
-
-            }
-            ,
+            handleNoItemOk(){
+                this.$router.push({ path: '/browse' });
+            },
+            onItemDeleteClick(id){
+                let json = {Token:this.token, ObjId: id};
+                let link = 'http://165.232.138.223:8080/item/delete';
+                this.fetchData(json, link, 2);
+            },
             onItemDetailClick(id) {
                 console.log(id);
                 this.$router.push({ path: "/detail/"+id }).then(this.$forceUpdate());
             },
-            onFilterApplyClicked(){
-                let minPrice = 0;
-                let maxPrice = 999999999999;
-                if(this.priceLow !== null){
-                    minPrice = parseFloat(this.priceLow);
-                }
-                if(this.priceHigh !== null){
-                    maxPrice = parseFloat(this.priceHigh);
-                }
-                let json = {FuzzyTitle : this.keyword, Tags: this.filterTag, PriceLow:minPrice, PriceHigh:maxPrice };
-                this.fetchData(json);
-
-            }
-            ,
-            fetchData(json){
-                //let json = {FuzzyTitle : this.keyword };
-                console.log('JSON:'+JSON.stringify(json));
-                var link = 'http://165.232.138.223:8080/item/get';
-                //console.log('link:' + link);
+            fetchData(json, link, type){
+                // type 1:get, 2:delete
+                console.log(JSON.stringify(json));
+                console.log('link:' + link);
 
                 fetch(link, {
                     method: 'POST',
@@ -126,9 +76,26 @@
                 }).then(response => response.json())
                     .then(data => {
                         console.log(data);
-                        this.items = this.preProcess(data.Items);
+                        if(type === 1){
+                            if(data.Items === null){
+                                this.$bvModal.show('no-item-modal')
+                            }else {
+                                this.items = this.preProcess(data.Items);
+                            }
+                        }
+                        if(type === 2){
+                            this.$router.go(0);
+                        }
                     }).catch(error=>{
                         console.log(error);
+                        this.variant = "danger";
+                        if(type === 1){
+                            //this.alertMsg = "Server contact error, try again later";
+                        }
+                        if(type === 2){
+                            //this.alertMsg = "Cannot delete if not the uploader.";
+                        }
+
                     }
                 )
             },
@@ -136,7 +103,6 @@
                 console.log(data);
                 if(data === null){return }
                 let output = [];
-                let tag = [];
                 for(let i=0; i< data.length; i++){
                     let record = data[i];
                     let title = "No title";
@@ -161,16 +127,8 @@
                     if(record.ObjId !== 0 ){
                         id = record.ObjId;
                     }
-                    if(record.Tags.length > 0){
-                        for(let j =0; j < record.Tags.length ; j++){
-                            tag.push(record.Tags[j]);
-                            //console.log("pushed"+tag);
-                        }
-                    }
-
                     output.push({id:id, title:title, desc:desc, thumb:thumb, price:price})
                 }
-                this.filterTag = [...new Set(tag)];
                 return output;
 
             },
@@ -184,7 +142,7 @@
 <style>
     .card-img-top {
         width: 100%;
-        height: 12vw;
+        height: 15vw;
         object-fit: cover;
     }
     a { text-decoration: none; }

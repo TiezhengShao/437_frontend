@@ -11,13 +11,13 @@
       <li v-if="false"><router-link to="/item/:id" >Item</router-link></li>
       <li v-if="false"><router-link to="/thanks" >Thanks</router-link></li>
 
-<!--
-      <li v-if="$router.currentRoute.path != '/login' && $router.currentRoute.path != '/'"><router-link to="/new" >New Item</router-link></li>
-      <li v-if="$router.currentRoute.path != '/login'  && $router.currentRoute.path != '/'"><router-link to="/browse" >Browse</router-link></li>
-      <li v-if="$router.currentRoute.path != '/login'" @click="onLogoutClick()" > <router-link to="/login" >Logout</router-link></li>
-      <li v-if="$router.currentRoute.path != '/login'  && $router.currentRoute.path != '/'"><router-link to="/detail" >Item Detail</router-link></li>
-      <li v-if="$router.currentRoute.path != '/login'  && $router.currentRoute.path != '/'"><router-link to="/main" >Main</router-link></li>
-      <li v-if="$router.currentRoute.path != '/login' && $router.currentRoute.path != '/'"><router-link to="/newOld" >New Item Old(Alpha Version)</router-link></li>-->
+      <!--
+            <li v-if="$router.currentRoute.path != '/login' && $router.currentRoute.path != '/'"><router-link to="/new" >New Item</router-link></li>
+            <li v-if="$router.currentRoute.path != '/login'  && $router.currentRoute.path != '/'"><router-link to="/browse" >Browse</router-link></li>
+            <li v-if="$router.currentRoute.path != '/login'" @click="onLogoutClick()" > <router-link to="/login" >Logout</router-link></li>
+            <li v-if="$router.currentRoute.path != '/login'  && $router.currentRoute.path != '/'"><router-link to="/detail" >Item Detail</router-link></li>
+            <li v-if="$router.currentRoute.path != '/login'  && $router.currentRoute.path != '/'"><router-link to="/main" >Main</router-link></li>
+            <li v-if="$router.currentRoute.path != '/login' && $router.currentRoute.path != '/'"><router-link to="/newOld" >New Item Old(Alpha Version)</router-link></li>-->
 
     </ul>
   </div>
@@ -33,12 +33,13 @@ import thanks from "@/components/thanks";
 import newItem from "@/components/newItem";
 //import item from "@/components/item";
 import itemDetail from "@/components/itemDetail";
+import itemList from "@/components/itemList";
 import VueRouter from 'vue-router';
 
 Vue.use(VueRouter);
 
 const routes = [
-  {path: '/', component: login, meta: {guest: true}},
+  {path: '', component: login, meta: {title:'Market Login',guest: true}},
   {path: '/login', component: login, meta: {title:'Market Login',guest: true}},
   // {path: '/verify', component: verify},
   {path: '/new', component: itemUpload, meta: {title:'WashU MarketPlace',requiresAuth: true}},
@@ -47,6 +48,8 @@ const routes = [
   {path: '/thanks', component: thanks, meta: {requiresAuth: true}},
   {path: '/newOld', component: newItem, meta: {requiresAuth: true}},
   //{path: '/browse', component: browse, meta: {requiresAuth: true}},
+  {path: '/list', component: itemList, meta: {title:'My Selling Items', requiresAuth: true}},
+
   {path: '/browse', component: main, meta: {title:'WashU MarketPlace', requiresAuth: true}},
   {path: '/detail/:id', component: itemDetail, meta: {title:'WashU MarketPlace', requiresAuth: true}}
 ];
@@ -72,7 +75,6 @@ router.beforeEach((to, from, next) => {
       localStorage.clear();
     }
   }
-
 
     if(to.matched.some(record => record.meta.requiresAuth)) {
         if (localStorage.getItem('jwt') == null) {
@@ -115,6 +117,5 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
 </style>

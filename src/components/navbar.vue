@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <b-navbar toggleable="lg" type="dark" variant="info" fixed="top">
+    <div class="pb-2">
+        <b-navbar toggleable="lg" type="dark" variant="info" sticky >
             <b-navbar-brand href="#" @click="onTitleClick()">WashU Marketplace</b-navbar-brand>
 
                 <form class="form-inline mt-2 mt-md-0">
@@ -20,6 +20,9 @@
                         <ul class="navbar-nav mr-auto">
                             <li class="nav-item">
                                 <a class="nav-link " @click="onSellClick()" href="#" tabindex="-1" aria-disabled="true">Sell</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link " @click="onListClick()" href="#" tabindex="-1" aria-disabled="true">My Listing</a>
                             </li>
 <!--                            <li class="nav-item">
                                 <a class="nav-link" href="#">Username</a>
@@ -64,6 +67,9 @@
             onSellClick(){
                 this.$router.push({ path: "/new" }).then(this.$forceUpdate());
 
+            },
+            onListClick(){
+                this.$router.push({ path: "/list" }).then(this.$forceUpdate());
             },
             onLogoutClick(){
                 localStorage.clear();
