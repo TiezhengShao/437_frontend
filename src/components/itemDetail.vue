@@ -1,6 +1,6 @@
 <template>
     <div>
-        <navbar @detailSearch_event="search"></navbar>
+        <navbar @detailSearchEvent="search"></navbar>
 
         <b-container fluid>
             <!-- Stack the columns on mobile by making one full-width and the other half-width -->

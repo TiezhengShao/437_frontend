@@ -1,6 +1,6 @@
 <template>
     <div>
-        <navbar @search_event="search"></navbar>
+        <navbar @searchEvent="search"></navbar>
         <b-container fluid>
         <b-row class="">
                 <b-col  class="col-2 pt-5">
@@ -18,18 +18,21 @@
                         </b-row>
                         <b-row class="pt-1 pb-2 border-top">
                             <H6 class="pt-1">Tags</H6>
-                            <b-form-tags
-                                    input-id="tags-pills"
-                                    v-model="filterTag"
-                                    tag-variant="secondary"
-                                    tag-pills
-                                    size="sm"
-                                    separator=" "
-                                    placeholder="Remove Unwanted Tag"
-                            ></b-form-tags>
+                            <b-form-select v-model="tagSelected" :options="tags" size="sm" ></b-form-select>
+                            <!--                            <b-form-tags
+                                                                input-id="tags-pills"
+                                                                v-model="filterTag"
+                                                                tag-variant="secondary"
+                                                                tag-pills
+                                                                size="sm"
+                                                                separator=" "
+                                                                placeholder="Remove Unwanted Tag"
+                                                        ></b-form-tags>-->
                         </b-row>
                         <b-row class="pt-1 pb-2">
                             <b-button block variant="outline-success" @click="onFilterApplyClicked()">Apply</b-button>
+                            <b-button block variant="outline-danger" @click="onFilterResetClicked()">Reset</b-button>
+
                         </b-row>
 
                     </b-container>
@@ -65,13 +68,15 @@
                 filterTag: [],
                 items: [],
                 keyword:'',
+                tagSelected:null,
                 priceLow:null,
                 priceHigh:null,
+                tags:[]
             }
         },
         mounted() {
             let keyword = this.$route.query.keyword;
-            //console.log('keyword:' + keyword);
+            console.log('keyword:' + keyword);
             if(keyword !== undefined){
                 if(keyword.length > 0 ){
                     this.keyword = keyword
@@ -106,11 +111,19 @@
                 if(this.priceHigh !== null){
                     maxPrice = parseFloat(this.priceHigh);
                 }
-                let json = {FuzzyTitle : this.keyword, Tags: this.filterTag, PriceLow:minPrice, PriceHigh:maxPrice };
+                let json = {FuzzyTitle : this.keyword, PriceLow:minPrice, PriceHigh:maxPrice };
+                if(this.tagSelected !== null){
+                    json = {FuzzyTitle : this.keyword, Tags: [this.tagSelected], PriceLow:minPrice, PriceHigh:maxPrice };
+                }
                 this.fetchData(json);
-
-            }
-            ,
+            },
+            onFilterResetClicked(){
+                let json = {FuzzyTitle : '' };
+                this.tagSelected = null;
+                this.priceLow = null;
+                this.priceHigh = null;
+                this.fetchData(json);
+            },
             fetchData(json){
                 //let json = {FuzzyTitle : this.keyword };
                 console.log('JSON:'+JSON.stringify(json));
@@ -136,7 +149,7 @@
                 console.log(data);
                 if(data === null){return }
                 let output = [];
-                let tag = [];
+                var tag = [];
                 for(let i=0; i< data.length; i++){
                     let record = data[i];
                     let title = "No title";
@@ -170,6 +183,13 @@
 
                     output.push({id:id, title:title, desc:desc, thumb:thumb, price:price})
                 }
+                tag = [...new Set(tag)];
+                let tempTags = [];
+                for(let i = 0; i < tag.length ; i++){
+                    let tagInArray = {value:tag[i], text:tag[i]}
+                    tempTags.push(tagInArray);
+                }
+                this.tags = tempTags;
                 this.filterTag = [...new Set(tag)];
                 return output;
 

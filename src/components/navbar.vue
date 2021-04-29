@@ -57,12 +57,18 @@
         },
         methods:{
             onTitleClick(){
-                this.$router.push({ path: "/browse" }).then(this.$forceUpdate());
+                console.log("path:" + this.$router.currentRoute.path);
+                if(this.$router.currentRoute.path === '/browse'){
+                    this.$router.go(0);
+                } else {
+                    this.$router.push({ path: "/browse", query:{keyword:''}}).then(this.$forceUpdate());
+                }
             },
             onSearchClick(){
-                this.$emit("search_event", this.keyword);
-                this.$emit("detailSearch_event", this.keyword)
-
+                this.$emit("searchEvent", this.keyword);
+                this.$emit("newItemSearchEvent", this.keyword);
+                this.$emit("detailSearchEvent", this.keyword);
+                this.$emit("listSearchEvent", this.keyword);
             },
             onSellClick(){
                 this.$router.push({ path: "/new" }).then(this.$forceUpdate());

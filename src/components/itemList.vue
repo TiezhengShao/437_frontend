@@ -1,6 +1,6 @@
 <template>
     <div>
-        <navbar></navbar>
+        <navbar @listSearchEvent="search"></navbar>
         <b-container fluid>
             <b-modal class="modal-sm" id="no-item-modal" title="No Item Found" ok-only ok-variant="secondary" @ok="handleNoItemOk">
                 <p class="my-4">It looks like you have not posted any item yet. </p>
@@ -50,6 +50,9 @@
             }
         },
         methods: {
+            search(keyword){
+                this.$router.push({ path: '/browse' , query:{keyword:keyword}});
+            },
             handleNoItemOk(){
                 this.$router.push({ path: '/browse' });
             },
@@ -88,7 +91,6 @@
                         }
                     }).catch(error=>{
                         console.log(error);
-                        this.variant = "danger";
                         if(type === 1){
                             //this.alertMsg = "Server contact error, try again later";
                         }

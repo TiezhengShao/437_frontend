@@ -1,6 +1,6 @@
 <template>
     <div>
-        <navbar></navbar>
+        <navbar @newItemSearchEvent="search"></navbar>
 
         <b-container>
             <!-- Stack the columns on mobile by making one full-width and the other half-width -->
@@ -100,12 +100,10 @@
 
             };
         },
-        computed: {
-        },
-        watch: {
-
-        },
         methods: {
+            search(keyword){
+                this.$router.push({ path: '/browse' , query:{keyword:keyword}});
+            },
             onPostItemBtnClick(event){
                 event.preventDefault();
                 if(this.itemName === '' || this.itemPrice === null){
